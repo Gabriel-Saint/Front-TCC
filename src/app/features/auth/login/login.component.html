@@ -1,0 +1,47 @@
+<main class="login-container">
+  <div class="login-card">
+
+    <section class="form-section">
+      <div class="logo"></div>
+      
+      <div class="form-header">
+        <h1>Login</h1>
+      </div>
+
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <div class="form-group">
+          <label for="email">Email*</label>
+          <input 
+              type="email" 
+              id="email" 
+              placeholder="Digite seu email" 
+              formControlName="email">  
+          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-message">
+            <small *ngIf="email?.errors?.['required']">Email é obrigatório.</small>
+            <small *ngIf="email?.errors?.['email']">Por favor, insira um email válido.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha*</label>
+          <input 
+              type="password" 
+              id="senha" 
+              placeholder="Digite a sua senha" 
+              formControlName="senha"> 
+          <div *ngIf="senha?.invalid && (senha?.dirty || senha?.touched)" class="error-message">
+            <small *ngIf="senha?.errors?.['required']">Senha é obrigatória.</small>
+            <small *ngIf="senha?.errors?.['minLength']">A senha deve ter no mínimo 6 caracteres.</small>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="loginForm.invalid">Login</button>
+      </form>
+    </section>
+
+
+    <section class="illustration-section"></section>
+    
+  </div>
+</main>

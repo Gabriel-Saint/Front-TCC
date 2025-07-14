@@ -1,0 +1,88 @@
+/* _reset.scss */
+
+/* 1. Regra de Box Sizing Universal
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Reset de Margens e Espaçamentos
+*/
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+/* 3. Configurações no Elemento Raiz (html) e Body
+*/
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.5; 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; 
+  -webkit-font-smoothing: antialiased; 
+}
+
+/* 4. Remove o estilo padrão das listas
+*/
+ul,
+ol {
+  list-style: none;
+}
+
+/* 5. Comportamento de Mídia
+*/
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 6. Herança de Tipografia para Elementos de Formulário
+*/
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* 7. Reset básico para links
+*/
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 8. Reset básico para botões
+*/
+button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+}
