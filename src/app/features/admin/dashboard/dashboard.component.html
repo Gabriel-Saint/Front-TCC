@@ -1,0 +1,51 @@
+<div class="dashboard-page" id="dashboard-content" *ngIf="stats">
+  <header class="page-header">
+    <h1>Dashboard</h1>
+    <button class="export-button" (click)="exportarPDF()">Exportar para pdf</button>
+  </header>
+
+  <section class="stats-cards">
+    <div class="stat-card">
+      <p>Total de vendas</p>
+      <span><mat-icon>monetization_on</mat-icon> + {{ stats.totalVendas | currency:'BRL' }}</span>
+    </div>
+    <div class="stat-card">
+      <p>Total de pedidos</p>
+      <span><mat-icon>shopping_cart</mat-icon> + {{ stats.totalPedidos | number }}</span>
+    </div>
+    <div class="stat-card">
+      <p>Produtos vendidos</p>
+      <span><mat-icon>inventory_2</mat-icon> + {{ stats.produtosVendidos | number }}</span>
+    </div>
+    <div class="stat-card">
+      <p>Valor médio de vendas por dia</p>
+      <span><mat-icon>show_chart</mat-icon> + {{ stats.valorMedioVendas | currency:'BRL' }}</span>
+    </div>
+  </section>
+
+  <section class="charts-section">
+    <div class="chart-container">
+      <h2>Gráfico de vendas</h2>
+      <ngx-charts-bar-vertical
+        [results]="graficoVendasData"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        xAxisLabel="Dias"
+        yAxisLabel="Vendas (R$)">
+      </ngx-charts-bar-vertical>
+    </div>
+    <div class="chart-container">
+      <h2>Produtos mais vendidos</h2>
+     <ngx-charts-pie-chart
+        [results]="produtosMaisVendidosData"
+        [doughnut]="true"
+        [legend]="true"
+        [legendPosition]="legendPosition"
+        [labels]="true">
+      </ngx-charts-pie-chart>
+    </div>
+  </section>
+</div>

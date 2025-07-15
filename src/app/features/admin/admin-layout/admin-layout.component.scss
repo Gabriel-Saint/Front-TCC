@@ -1,34 +1,48 @@
-.sidenav-container {
-  height: 100vh;
-}
+:host {
+  --primary-color: #101540;
 
-.sidenav {
-  width: 200px;
-  // Você pode estilizar o fundo aqui se não quiser usar o do tema
-  background-color: var(--primary-color);
-  color: #f4f7f6;
-}
-
-.sidebar-header {
-  padding: 1rem;
-  text-align: center;
-
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: inherit;
+  .sidenav-container {
+    height: 100vh;
   }
-}
 
-a.active-link {
-  background-color: rgba(0, 0, 0, 0.1);
-  font-weight: 500;
-}
+  .sidenav {
+    width: 200px;
+    background-color: var(--primary-color);
+  }
 
-.main-content {
-  padding: 2rem;
-  background-color: #f4f7f6;
-  height: calc(100vh - 64px); // Altura total - altura da toolbar
-  overflow-y: auto; // Adiciona scroll se o conteúdo for maior
+  .sidebar-header {
+    padding: 1rem;
+    text-align: center;
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+
+  a.active-link {
+    background-color: rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+  }
+
+  .main-content {
+    padding: 2rem;
+    background-color: #f4f7f6;
+    height: calc(100vh - 64px); // Altura total - altura da toolbar
+    overflow-y: auto;
+  }
+
+  // Estilos globais para sobrescrever estilos do Angular Material
+  ::ng-deep {
+    .mdc-list-item__primary-text,
+    .mdc-list-item__start {
+      color: #f4f7f6 !important;
+    }
+
+    .mat-sidenav {
+      border-radius: 0 !important;
+    }
+  }
 }
