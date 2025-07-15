@@ -1,0 +1,83 @@
+<main class="register-container">
+  <div class="register-card">
+
+    <section class="illustration-section">
+      </section>
+
+    <section class="form-section">
+      <div class="logo"></div>
+      
+      <div class="form-header">
+        <h1>Cadastro de nova conta</h1>
+      </div>
+
+      <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" placeholder="Digite seu nome completo" formControlName="nome">
+            <div *ngIf="nome?.invalid && nome?.touched" class="error-message">
+              <small *ngIf="nome?.errors?.['required']">Nome é obrigatório.</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" placeholder="Digite seu CPF" formControlName="cpf">
+            <div *ngIf="cpf?.invalid && cpf?.touched" class="error-message">
+              <small *ngIf="cpf?.errors?.['required']">CPF é obrigatório.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Digite seu email" formControlName="email">
+            <div *ngIf="email?.invalid && email?.touched" class="error-message">
+               <small *ngIf="email?.errors?.['required']">Email é obrigatório.</small>
+               <small *ngIf="email?.errors?.['email']">Email inválido.</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" placeholder="Digite seu telefone" formControlName="telefone">
+             <div *ngIf="telefone?.invalid && telefone?.touched" class="error-message">
+               <small *ngIf="telefone?.errors?.['required']">Telefone é obrigatório.</small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="funcao">Função</label>
+          <input type="text" id="funcao" placeholder="Digite a sua função" formControlName="funcao">
+           <div *ngIf="funcao?.invalid && funcao?.touched" class="error-message">
+               <small *ngIf="funcao?.errors?.['required']">Função é obrigatória.</small>
+            </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" placeholder="Digite a sua senha" formControlName="senha">
+           <div *ngIf="senha?.invalid && senha?.touched" class="error-message">
+               <small *ngIf="senha?.errors?.['required']">Senha é obrigatória.</small>
+               <small *ngIf="senha?.errors?.['minlength']">A senha precisa de no mínimo 6 caracteres.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmacaoSenha">Confirmação de senha</label>
+          <input type="password" id="confirmacaoSenha" placeholder="Confirme a sua senha" formControlName="confirmacaoSenha">
+          <div *ngIf="confirmacaoSenha?.invalid && confirmacaoSenha?.touched" class="error-message">
+               <small *ngIf="confirmacaoSenha?.errors?.['required']">Confirmação de senha é obrigatória.</small>
+          </div>
+          <div *ngIf="registerForm.errors?.['passwordMismatch'] && confirmacaoSenha?.touched" class="error-message">
+            <small>As senhas não coincidem.</small>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-register" [disabled]="registerForm.invalid">Criar conta</button>
+      </form>
+    </section>
+  </div>
+</main>
