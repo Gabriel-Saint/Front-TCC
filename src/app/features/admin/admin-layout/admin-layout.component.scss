@@ -1,4 +1,5 @@
 :host {
+  // --- Variáveis e Estilos de Layout ---
   --primary-color: #101540;
 
   .sidenav-container {
@@ -10,39 +11,53 @@
     background-color: var(--primary-color);
   }
 
-  .sidebar-header {
-    padding: 1rem;
-    text-align: center;
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-decoration: none;
-      color: inherit;
-    }
-  }
-
-  a.active-link {
-    background-color: rgba(0, 0, 0, 0.1);
-    font-weight: 500;
-  }
-
   .main-content {
     padding: 2rem;
     background-color: #f4f7f6;
-    height: calc(100vh - 64px); // Altura total - altura da toolbar
+    height: calc(100vh - 64px);
     overflow-y: auto;
   }
 
-  // Estilos globais para sobrescrever estilos do Angular Material
+  // --- NOVOS ESTILOS PARA O SUBMENU ---
+  .parent-item {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .submenu-arrow {
+    position: absolute;
+    right: 16px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .submenu {
+    background-color: rgba(0, 0, 0, 0.2); 
+    overflow: hidden;
+  }
+
+  // --- Overrides Globais para o Tema do Material ---
   ::ng-deep {
+   
+    .mat-sidenav {
+      border-radius: 0 !important;
+    }
+
+    
     .mdc-list-item__primary-text,
-    .mdc-list-item__start {
+    .mdc-list-item__start { 
       color: #f4f7f6 !important;
     }
 
-    .mat-sidenav {
-      border-radius: 0 !important;
+
+    .submenu .mat-list-item {
+      
+      padding-left: 56px !important; 
+      font-size: 0.9rem; 
+    }
+
+    .mat-nav-list a.active-link {
+      background-color: rgba(0, 0, 0, 0.25) !important;
+      font-weight: 500;
     }
   }
 }

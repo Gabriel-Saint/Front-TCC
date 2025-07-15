@@ -52,8 +52,11 @@
 
 .charts-section {
   display: grid;
-
-  grid-template-columns: 1fr 1fr; 
+  /*
+    AJUSTE PRINCIPAL: O espaço total é dividido em 5 partes (2+3).
+    O primeiro gráfico (vendas) ocupa 2 partes (40%) e o segundo (produtos) ocupa 3 partes (60%).
+  */
+  grid-template-columns: 2fr 3fr; 
   gap: 1.2rem;
   max-width: 100%;
   overflow-x: hidden;
@@ -74,15 +77,14 @@
   ngx-charts-bar-vertical,
   ngx-charts-pie-chart {
     display: block;
-    
-    height: 150px; 
+    height: 180px; /* Aumentei um pouco a altura para compensar a largura */
     width: 100%;
     max-width: 100%;
   }
 }
 
 .chart-placeholder {
-  height: 150px;
+  height: 180px;
   display: grid;
   place-content: center;
   background-color: #fafafa;

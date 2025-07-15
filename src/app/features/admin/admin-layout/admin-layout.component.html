@@ -1,34 +1,49 @@
 <mat-sidenav-container class="sidenav-container">
-
   <mat-sidenav #sidenav mode="side" opened class="sidenav">
-    <!-- <div class="sidebar-header">
-      <h2 class="logo">Meu App</h2>
-    </div> -->
-    
     <mat-nav-list>
-      <a mat-list-item 
-         *ngFor="let item of navItems"
-         [routerLink]="item.path"
-         routerLinkActive="active-link">
-        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span>{{ item.label }}</span>
-      </a>
+      <!-- Loop principal nos itens de navegação -->
+      <ng-container *ngFor="let item of navItems">
+
+        <!-- CASO 1: O item NÃO tem submenu -->
+        <a mat-list-item *ngIf="!item.children"
+           [routerLink]="item.path"
+           routerLinkActive="active-link">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+
+        <!-- CASO 2: O item TEM submenu -->
+        <div *ngIf="item.children">
+          <!-- Item pai que abre/fecha o submenu -->
+          <a mat-list-item (click)="toggleSubmenu(item.label)" class="parent-item">
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+            <!-- Ícone de seta que muda com o estado -->
+            <mat-icon class="submenu-arrow">{{ expandedStates[item.label] ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </a>
+          <!-- O submenu em si, que só aparece se estiver expandido -->
+          <div class="submenu" *ngIf="expandedStates[item.label]">
+            <a mat-list-item *ngFor="let child of item.children"
+               [routerLink]="child.path"
+               routerLinkActive="active-link">
+              {{ child.label }}
+            </a>
+          </div>
+        </div>
+
+      </ng-container>
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    
     <mat-toolbar color="primary">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
       <span>Painel Administrativo</span>
     </mat-toolbar>
-
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>
-
   </mat-sidenav-content>
-
 </mat-sidenav-container>

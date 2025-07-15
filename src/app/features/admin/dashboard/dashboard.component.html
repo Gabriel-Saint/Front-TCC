@@ -24,6 +24,16 @@
   </section>
 
   <section class="charts-section">
+     <div class="chart-container">
+      <h2>Produtos mais vendidos</h2>
+     <ngx-charts-pie-chart
+        [results]="produtosMaisVendidosData"
+        [doughnut]="true"
+        [legend]="true"
+        [legendPosition]="legendPosition"
+        [labels]="true">
+      </ngx-charts-pie-chart>
+    </div>
     <div class="chart-container">
       <h2>Gráfico de vendas</h2>
       <ngx-charts-bar-vertical
@@ -37,15 +47,6 @@
         yAxisLabel="Vendas (R$)">
       </ngx-charts-bar-vertical>
     </div>
-    <div class="chart-container">
-      <h2>Produtos mais vendidos</h2>
-     <ngx-charts-pie-chart
-        [results]="produtosMaisVendidosData"
-        [doughnut]="true"
-        [legend]="true"
-        [legendPosition]="legendPosition"
-        [labels]="true">
-      </ngx-charts-pie-chart>
-    </div>
+
   </section>
 </div>

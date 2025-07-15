@@ -17,7 +17,6 @@ import { MatButtonModule } from '@angular/material/button';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    // Módulos do Angular Material'
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
@@ -28,10 +27,33 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./admin-layout.component.scss']
 })
 export class AdminLayoutComponent {
+  // Objeto para controlar o estado (aberto/fechado) de cada submenu
+  expandedStates: { [key: string]: boolean } = {};
+
+  // Nova estrutura de navegação com submenus
   navItems = [
     { path: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
     { path: 'pedidos', icon: 'shopping_cart', label: 'Pedidos' },
-    { path: 'produtos', icon: 'inventory_2', label: 'Produtos' },
-    { path: 'usuarios', icon: 'group', label: 'Usuários' },
+    { 
+      label: 'Produtos', 
+      icon: 'inventory_2',
+      children: [
+        { path: 'produtos/listar', label: 'Listar Produtos' }, 
+        { path: 'produtos/novo', label: 'Cadastrar Produto' }, 
+      ]
+    },
+    { 
+      label: 'Usuários', 
+      icon: 'group',
+      children: [
+        { path: 'usuarios/listar', label: 'Listar Usuários' },
+        { path: 'usuarios/novo', label: 'Adicionar Novo' },
+      ]
+    },
   ];
+
+  // Função para abrir/fechar o submenu
+  toggleSubmenu(label: string): void {
+    this.expandedStates[label] = !this.expandedStates[label];
+  }
 }
