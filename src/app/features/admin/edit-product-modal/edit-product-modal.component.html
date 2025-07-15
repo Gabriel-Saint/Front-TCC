@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Editar Produto</h2>
+<mat-dialog-content>
+  <form [formGroup]="editForm" class="edit-product-form">
+    <!-- Campo de Imagem -->
+    <div class="form-row image-row">
+      <label class="form-label">Imagem</label>
+      <div class="form-control">
+        <input type="file" hidden #fileInput (change)="onFileSelected($event)">
+        <button mat-stroked-button type="button" (click)="fileInput.click()">Selecione</button>
+        <button mat-stroked-button type="button" color="warn" (click)="removeImage()" *ngIf="imagePreview">Remover</button>
+        <div class="image-preview" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Pré-visualização">
+        </div>
+      </div>
+    </div>
+    <!-- Outros campos -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome do Produto</mat-label>
+      <input matInput formControlName="name">
+    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Categoria</mat-label>
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let cat of categorias" [value]="cat">{{cat}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Preço</mat-label>
+        <input matInput type="number" formControlName="value" placeholder="0.00">
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="description" rows="4"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="editForm.invalid">Salvar</button>
+</mat-dialog-actions>

@@ -45,6 +45,10 @@ export const routes: Routes = [
       {
         path: 'usuarios/novo',
         loadComponent: () => import('./features/admin/create-user/create-user.component').then(c => c.CreateUserComponent)
+      },
+      {
+        path: 'produtos',
+        loadComponent: () => import('./features/admin/products-list/products-list.component').then(c => c.ProductsListComponent)
       }
     ]
   },
