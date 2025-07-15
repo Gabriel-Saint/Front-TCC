@@ -2,7 +2,8 @@
   <div class="register-card">
 
     <section class="illustration-section">
-      </section>
+      <!-- A imagem de fundo é controlada pelo CSS -->
+    </section>
 
     <section class="form-section">
       <div class="logo"></div>
@@ -15,10 +16,12 @@
         
         <div class="form-row">
           <div class="form-group">
-            <label for="nome">Nome</label>
-            <input type="text" id="nome" placeholder="Digite seu nome completo" formControlName="nome">
-            <div *ngIf="nome?.invalid && nome?.touched" class="error-message">
-              <small *ngIf="nome?.errors?.['required']">Nome é obrigatório.</small>
+            <label for="name">Nome</label>
+            <!-- CORREÇÃO: formControlName e id atualizados -->
+            <input type="text" id="name" placeholder="Digite seu nome completo" formControlName="name">
+            <!-- CORREÇÃO: Usando o getter 'name' -->
+            <div *ngIf="name?.invalid && name?.touched" class="error-message">
+              <small *ngIf="name?.errors?.['required']">Nome é obrigatório.</small>
             </div>
           </div>
           <div class="form-group">
@@ -40,28 +43,25 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="telefone">Telefone</label>
-            <input type="tel" id="telefone" placeholder="Digite seu telefone" formControlName="telefone">
-             <div *ngIf="telefone?.invalid && telefone?.touched" class="error-message">
-               <small *ngIf="telefone?.errors?.['required']">Telefone é obrigatório.</small>
+            <label for="phone">Telefone</label>
+            <!-- CORREÇÃO: formControlName e id atualizados -->
+            <input type="tel" id="phone" placeholder="Digite seu telefone" formControlName="phone">
+             <div *ngIf="phone?.invalid && phone?.touched" class="error-message">
+               <small *ngIf="phone?.errors?.['required']">Telefone é obrigatório.</small>
             </div>
           </div>
         </div>
         
-        <div class="form-group">
-          <label for="funcao">Função</label>
-          <input type="text" id="funcao" placeholder="Digite a sua função" formControlName="funcao">
-           <div *ngIf="funcao?.invalid && funcao?.touched" class="error-message">
-               <small *ngIf="funcao?.errors?.['required']">Função é obrigatória.</small>
-            </div>
-        </div>
+        <!-- REMOVIDO: O campo 'funcao' foi removido pois não existe na interface de cadastro -->
         
         <div class="form-group">
-          <label for="senha">Senha</label>
-          <input type="password" id="senha" placeholder="Digite a sua senha" formControlName="senha">
-           <div *ngIf="senha?.invalid && senha?.touched" class="error-message">
-               <small *ngIf="senha?.errors?.['required']">Senha é obrigatória.</small>
-               <small *ngIf="senha?.errors?.['minlength']">A senha precisa de no mínimo 6 caracteres.</small>
+          <label for="password">Senha</label>
+          <!-- CORREÇÃO: formControlName e id atualizados -->
+          <input type="password" id="password" placeholder="Digite a sua senha" formControlName="password">
+           <!-- CORREÇÃO: Usando o getter 'password' -->
+           <div *ngIf="password?.invalid && password?.touched" class="error-message">
+               <small *ngIf="password?.errors?.['required']">Senha é obrigatória.</small>
+               <small *ngIf="password?.errors?.['minlength']">A senha precisa de no mínimo 6 caracteres.</small>
             </div>
         </div>
 

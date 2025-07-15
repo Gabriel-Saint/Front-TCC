@@ -2,14 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UsersService } from '../../../core/services/users.service'; // Reutilizando o serviço de usuários
+// 1. Importe o AuthService e a interface IAuthSignUp
+import { AuthService } from '../../../core/services/auth.service';
+import { IAuthSignUp } from '../../../core/interfaces/auth/auth.inteface';
 
 // Imports do Angular Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
-// Validador de senha (pode ser movido para um arquivo de helpers no futuro)
+// Validador de senha
 export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const senha = control.get('senha');
   const confirmacaoSenha = control.get('confirmacaoSenha');
@@ -36,17 +38,18 @@ export class CreateUserComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private usersService: UsersService
+    // 2. Injete o AuthService aqui
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
     this.userForm = this.fb.group({
-      nome: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       cpf: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      telefone: ['', [Validators.required]],
-      funcao: ['', [Validators.required]],
-      senha: ['', [Validators.required, Validators.minLength(6)]],
+      phone: ['', [Validators.required]],
+      // funcao: ['', [Validators.required]], 
+      password: ['', [Validators.required, Validators.minLength(6)]],
       confirmacaoSenha: ['', [Validators.required]]
     }, {
       validators: passwordMatchValidator
@@ -55,13 +58,30 @@ export class CreateUserComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.valid) {
-      console.log('Novo usuário a ser criado:', this.userForm.value);
-      // Aqui você chamaria o serviço para adicionar o usuário
-      // this.usersService.createUser(this.userForm.value).subscribe(() => {
-      //   this.router.navigate(['/admin/usuarios']);
-      // });
-      alert('Usuário criado com sucesso! (Simulação)');
-      this.router.navigate(['/admin/usuarios']);
+     
+      const payload: IAuthSignUp = {
+        name: this.userForm.value.name,
+        email: this.userForm.value.email,
+        password: this.userForm.value.password,
+        cpf: this.userForm.value.cpf,
+        phone: this.userForm.value.phone,
+      };
+
+      this.authService.register(payload).subscribe({
+        next: () => {
+         
+          alert('Usuário criado com sucesso!');
+          console.log('Usuário criado com sucesso:', payload);
+          
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+        
+          console.error('Erro ao registrar usuário:', err);
+          
+          alert(`Falha no registro: ${err.error.message || 'Tente novamente.'}`);
+        }
+      });
     } else {
       this.userForm.markAllAsTouched();
     }

@@ -3,18 +3,21 @@ import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+// 1. Importe o serviço e a interface
+import { AuthService } from '../../../core/services/auth.service';
+import { IAuthSignUp } from '../../../core/interfaces/auth/auth.inteface';
+
 
 export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-  const senha = control.get('senha');
+  // CORREÇÃO: Usar 'password' para consistência
+  const password = control.get('password');
   const confirmacaoSenha = control.get('confirmacaoSenha');
 
-  // Se os campos ainda não foram tocados, não valide
-  if (senha?.pristine || confirmacaoSenha?.pristine) {
+  if (password?.pristine || confirmacaoSenha?.pristine) {
     return null;
   }
 
-  // Retorna um erro se os valores não baterem
-  return senha && confirmacaoSenha && senha.value !== confirmacaoSenha.value
+  return password && confirmacaoSenha && password.value !== confirmacaoSenha.value
     ? { passwordMismatch: true }
     : null;
 };
@@ -36,41 +39,52 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    // CORREÇÃO: Renomeado para 'authService' por convenção
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    // CORREÇÃO: Os nomes dos campos agora correspondem à interface IAuthSignUp
     this.registerForm = this.fb.group({
-      nome: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       cpf: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      telefone: ['', [Validators.required]],
-      funcao: ['', [Validators.required]],
-      senha: ['', [Validators.required, Validators.minLength(6)]],
+      phone: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       confirmacaoSenha: ['', [Validators.required]]
     }, {
-      validators: passwordMatchValidator 
+      validators: passwordMatchValidator
     });
   }
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      console.log('Formulário de cadastro enviado!', this.registerForm.value);
-      // Aqui você chamaria seu serviço para criar a conta
-      // e depois navegaria para a tela de login ou dashboard
-      this.router.navigate(['/login']);
+      // Agora podemos usar o valor do formulário diretamente, pois os nomes correspondem.
+      // Apenas precisamos remover 'confirmacaoSenha' que não vai para a API.
+      const { confirmacaoSenha, ...payload } = this.registerForm.value;
+
+      this.authService.register(payload).subscribe({
+        next: () => {
+          alert('Cadastro realizado com sucesso!');
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error('Erro no cadastro:', err);
+          alert(`Falha no cadastro: ${err.error.message || 'Verifique os dados e tente novamente.'}`);
+        }
+      });
     } else {
       console.log('Formulário inválido.');
       this.registerForm.markAllAsTouched();
     }
   }
 
-  // Getters para facilitar o acesso no template
-  get nome() { return this.registerForm.get('nome'); }
+  // CORREÇÃO: Getters atualizados para os novos nomes de campos
+  get name() { return this.registerForm.get('name'); }
   get cpf() { return this.registerForm.get('cpf'); }
   get email() { return this.registerForm.get('email'); }
-  get telefone() { return this.registerForm.get('telefone'); }
-  get funcao() { return this.registerForm.get('funcao'); }
-  get senha() { return this.registerForm.get('senha'); }
+  get phone() { return this.registerForm.get('phone'); }
+  get password() { return this.registerForm.get('password'); }
   get confirmacaoSenha() { return this.registerForm.get('confirmacaoSenha'); }
 }
