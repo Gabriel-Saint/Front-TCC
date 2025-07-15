@@ -1,0 +1,56 @@
+<div class="create-user-page">
+  <header class="page-header">
+    <h1>Adicionar novo usuário</h1>
+  </header>
+
+  <div class="form-container">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome Completo</mat-label>
+          <input matInput formControlName="nome">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>CPF</mat-label>
+          <input matInput formControlName="cpf">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input matInput type="tel" formControlName="telefone">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Função</mat-label>
+        <input matInput formControlName="funcao">
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="senha">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Confirmar Senha</mat-label>
+          <input matInput type="password" formControlName="confirmacaoSenha">
+           <mat-error *ngIf="userForm.errors?.['passwordMismatch'] && userForm.get('confirmacaoSenha')?.touched">
+            As senhas não coincidem.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+          Criar Usuário
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

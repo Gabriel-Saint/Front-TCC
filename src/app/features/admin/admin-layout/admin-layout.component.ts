@@ -46,7 +46,7 @@ export class AdminLayoutComponent {
       label: 'Usuários', 
       icon: 'group',
       children: [
-        { path: 'usuarios/listar', label: 'Listar Usuários' },
+        { path: 'usuarios', label: 'Listar Usuários' },
         { path: 'usuarios/novo', label: 'Adicionar Novo' },
       ]
     },

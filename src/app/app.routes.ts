@@ -37,6 +37,14 @@ export const routes: Routes = [
       {
         path: 'pedidos',
         loadComponent: () => import('./features/admin/orders-list/orders-list.component').then(c => c.OrdersListComponent)
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () => import('./features/admin/users-list/users-list.component').then(c => c.UsersListComponent)
+      },
+      {
+        path: 'usuarios/novo',
+        loadComponent: () => import('./features/admin/create-user/create-user.component').then(c => c.CreateUserComponent)
       }
     ]
   },

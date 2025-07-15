@@ -1,0 +1,13 @@
+.edit-form {
+  padding-top: 1rem;
+}
+.form-row {
+  display: flex;
+  gap: 1rem;
+  mat-form-field {
+    flex: 1;
+  }
+}
+.full-width {
+  width: 100%;
+}
