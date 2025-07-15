@@ -1,0 +1,116 @@
+.tracking-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.order-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 
+    "title status"
+    "time status";
+  align-items: center;
+
+  h2 {
+    grid-area: title;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .status-display {
+    grid-area: status;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f0f0f0;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+  }
+
+  .status-indicator {
+    width: 12px;
+    height: 12px;
+    background-color: #2ecc71; // Verde
+    border-radius: 50%;
+    // Animação de pulsar
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+
+  .status-text {
+    font-weight: 600;
+  }
+
+  .order-time {
+    grid-area: time;
+    color: #666;
+    font-size: 0.9rem;
+  }
+}
+
+.card-section {
+  padding: 1.5rem;
+
+  h3 {
+    margin: 0 0 4px 0;
+  }
+
+  .customer-phone {
+    color: #666;
+  }
+}
+
+.items-list .order-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.summary {
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  .payment-method {
+    color: #666;
+    font-size: 0.9rem;
+  }
+}
+
+.center-message {
+  text-align: center;
+  padding: 4rem;
+  color: #888;
+}
+
+// Keyframes para a animação da bolinha
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+  }
+}

@@ -1,1 +1,51 @@
-<p>order-tracking works!</p>
+<div class="tracking-page" *ngIf="order$ | async as order; else loadingOrNotFound">
+  <div class="order-card">
+    <!-- Cabeçalho do Pedido -->
+    <header class="card-header">
+      <h2>Pedido {{ order.id }}</h2>
+      <div class="status-display">
+        <!-- A bolinha piscando só aparece em certos status -->
+        <div class="status-indicator" *ngIf="order.status === 'Aguardando' || order.status === 'Pendente'"></div>
+        <span class="status-text">{{ order.status }}</span>
+      </div>
+      <span class="order-time">{{ order.date | date:'dd/MM/yyyy - HH:mm' }}</span>
+    </header>
+
+    <mat-divider></mat-divider>
+
+    <!-- Detalhes do Cliente -->
+    <section class="card-section">
+      <h3>{{ order.customerName }}</h3>
+      <p class="customer-phone">{{ order.customerPhone }}</p>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- Itens do Pedido -->
+    <section class="card-section items-list">
+      <div *ngFor="let item of order.items" class="order-item">
+        <span>{{ item.quantity }}x {{ item.name }}</span>
+        <span>{{ item.price | currency:'BRL' }}</span>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- Resumo do Pagamento -->
+    <section class="card-section summary">
+      <div class="summary-total">
+        <span>Total:</span>
+        <span>{{ order.total | currency:'BRL' }}</span>
+      </div>
+      <p class="payment-method">Método de pagamento: {{ order.paymentMethod }}</p>
+    </section>
+  </div>
+</div>
+
+<!-- Template para carregar ou se o pedido não for encontrado -->
+<ng-template #loadingOrNotFound>
+  <div class="center-message">
+    <p>Carregando detalhes do pedido...</p>
+    <!-- Você pode adicionar uma lógica mais robusta para diferenciar "carregando" de "não encontrado" -->
+  </div>
+</ng-template>

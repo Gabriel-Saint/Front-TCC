@@ -1,0 +1,38 @@
+<div class="my-orders-page">
+  <header class="page-header">
+    <h1>Meus Pedidos</h1>
+    <p>Acompanhe o status dos seus pedidos recentes.</p>
+  </header>
+
+  <div class="orders-list" *ngIf="myOrders$ | async as orders; else loading">
+    <ng-container *ngIf="orders.length > 0; else noOrders">
+      <a class="order-summary-card" *ngFor="let order of orders" [routerLink]="['/acompanhar-pedido', order.id]">
+        <div class="order-info">
+          <span class="order-id">Pedido #{{ order.id }}</span>
+          <span class="order-date">{{ order.date | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="order-total">
+          {{ order.total | currency:'BRL' }}
+        </div>
+        <div class="order-status">
+          <mat-icon>{{ getStatusIcon(order.status) }}</mat-icon>
+          <span>{{ order.status }}</span>
+        </div>
+        <mat-icon class="arrow-icon">chevron_right</mat-icon>
+      </a>
+    </ng-container>
+
+    <ng-template #noOrders>
+      <div class="center-message">
+        <h3>Você ainda não fez nenhum pedido.</h3>
+        <p>Explore nosso cardápio e faça seu primeiro pedido!</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #loading>
+    <div class="center-message">
+      <p>Carregando seus pedidos...</p>
+    </div>
+  </ng-template>
+</div>

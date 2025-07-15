@@ -8,8 +8,9 @@
   <mat-sidenav-content>
     <header class="main-header">
       <nav>
-        <a href="#">Início</a>
-        <a href="#">Acompanhar pedido</a>
+       
+        <a routerLink="/menu">Início</a>
+        <a *ngIf="hasOrders" routerLink="/meus-pedidos">Meus Pedidos</a>
       </nav>
       <div class="social-icons">
         <!-- Ícones de redes sociais -->
@@ -23,7 +24,7 @@
     <!-- Barra Inferior "Ver Sacola" -->
     <footer class="cart-footer" *ngIf="(cartItemCount$ | async)! > 0">
       <div class="footer-content">
-        <span>{{ cartTotal$ | async | currency:'BRL' }}</span>
+        <span class="price-info">{{ cartTotal$ | async | currency:'BRL' }}</span>
         <button (click)="toggleCart()">
           Ver sacola
           <span class="item-count">{{ cartItemCount$ | async }} itens</span>
