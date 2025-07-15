@@ -1,0 +1,116 @@
+.menu-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 2rem;
+
+  .category-pills button {
+    margin-right: 0.5rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover, &.active {
+      background-color: var(--primary-color, #101540);
+      color: #fff;
+      border-color: var(--primary-color, #101540);
+    }
+  }
+
+  .search-field {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+.category-section {
+  margin-bottom: 3rem;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.product-info {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    color: #666;
+    flex-grow: 1; // Empurra o preço para baixo
+    margin-bottom: 1rem;
+  }
+
+  .price-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: var(--primary-color, #101540);
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+.product-image {
+  width: 150px;
+  height: auto;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

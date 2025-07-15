@@ -1,0 +1,126 @@
+// Paleta de cores profissional para o cardápio digital
+:host {
+  --brand-primary: #D35400; // Um laranja queimado, convidativo e moderno
+  --brand-primary-hover: #E67E22; // CORREÇÃO: Nova variável para o hover
+  --brand-dark: #2C3E50;    // Azul escuro para textos e elementos importantes
+  --text-light: #FDFEFE;    // Branco suave para textos sobre fundos escuros
+  --background-main: #F4F6F7; // Cinza muito claro para o fundo
+  --surface-color: #FFFFFF;   // Branco puro para os cards
+  --accent-color: #E74C3C;     // Vermelho para destaques e notificações
+  --border-color: #EAECEE;   // Cor suave para bordas
+}
+
+.storefront-container {
+  height: 100vh;
+  background-color: var(--background-main);
+}
+
+.cart-sidenav {
+  width: 100%;
+  max-width: 420px; // Um pouco mais de espaço para a sacola
+  box-shadow: -5px 0px 25px rgba(0, 0, 0, 0.15);
+  border-left: 1px solid var(--border-color);
+}
+
+.main-header {
+  background-color: var(--surface-color);
+  color: var(--brand-dark);
+  padding: 0 2rem;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+
+  nav a {
+    color: var(--brand-dark);
+    text-decoration: none;
+    font-weight: 600; // Fonte mais forte
+    margin-right: 2rem;
+    transition: color 0.3s;
+    position: relative;
+    padding-bottom: 4px;
+
+    // Efeito de sublinhado animado
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--brand-primary);
+      transform: scaleX(0);
+      transform-origin: bottom right;
+      transition: transform 0.3s ease-out;
+    }
+
+    &:hover::after, &.active::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+  }
+}
+
+.main-content {
+  padding: 2.5rem; // Mais respiro
+}
+
+.cart-footer {
+  position: fixed;
+  bottom: 20px; // Flutuando um pouco acima da base
+  left: 50%;
+  transform: translateX(-50%); // Centraliza o footer
+  width: auto; // Largura automática baseada no conteúdo
+  background: linear-gradient(145deg, var(--brand-dark), #34495e);
+  color: var(--text-light);
+  border-radius: 50px; // Totalmente arredondado
+  box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+  z-index: 10;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateX(-50%) scale(1.03);
+  }
+
+  .footer-content {
+    padding: 0.8rem 1rem 0.8rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+
+    .price-info {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    button {
+      background-color: var(--brand-primary);
+      color: var(--text-light);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: background-color 0.3s;
+
+      &:hover {
+        // CORREÇÃO: Usando a nova variável de hover
+        background-color: var(--brand-primary-hover);
+      }
+    }
+
+    .item-count {
+      background-color: var(--accent-color);
+      color: var(--text-light);
+      border-radius: 50%;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  }
+}

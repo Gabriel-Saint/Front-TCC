@@ -1,0 +1,43 @@
+// Reutilizando os mesmos estilos das telas anteriores
+.categories-page {
+    padding: 1rem;
+}
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+.filters-container {
+    margin: 1.5rem 0;
+}
+.search-field {
+    width: 100%;
+    max-width: 400px;
+}
+.table-container {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+[mat-header-cell] {
+    color: rgba(0, 0, 0, .6);
+    font-weight: 600;
+}
+[mat-cell] button {
+    margin-right: 8px;
+}
+// ng-deep para garantir que as cores dos botões sejam aplicadas
+::ng-deep {
+    .edit-btn {
+        background-color: #f1c40f !important;
+        color: #333 !important;
+    }
+    .delete-btn {
+        background-color: #e74c3c !important;
+        color: #fff !important;
+    }
+}

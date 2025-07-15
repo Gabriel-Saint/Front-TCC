@@ -1,0 +1,95 @@
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #eee;
+
+  .steps {
+    display: flex;
+    gap: 1rem;
+    font-weight: 500;
+    color: #999;
+
+    .active {
+      color: var(--primary-color, #101540);
+      border-bottom: 2px solid var(--primary-color, #101540);
+    }
+  }
+}
+
+.cart-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+// Estilos da Etapa 1: Itens
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  img {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  .item-details {
+    flex-grow: 1;
+    p { margin: 0; font-weight: 500; }
+    span { color: #666; font-size: 0.9rem; }
+  }
+}
+
+// Estilos da Etapa 2 e 3
+.checkout-view, .payment-view {
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.payment-view {
+  .summary {
+    margin-bottom: 2rem;
+    div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #000;
+      border-top: 1px solid #eee;
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.cart-actions {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+
+  button {
+    width: 100%;
+    padding: 1rem 0;
+    font-size: 1rem;
+  }
+}

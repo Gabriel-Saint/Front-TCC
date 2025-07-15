@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // Rotas de Autenticação 
+  // Rotas de Autenticação (continuam acessíveis por suas URLs diretas)
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
@@ -11,26 +11,17 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent)
   },
 
-  // ROTA PRINCIPAL DO ADMIN (carrega o layout com o menu)
+  // ROTA PRINCIPAL DO ADMIN
   {
     path: 'admin',
     loadComponent: () => import('./features/admin/admin-layout/admin-layout.component').then(c => c.AdminLayoutComponent),
-
-    // As rotas filhas serão carregadas dentro do <router-outlet> do AdminLayoutComponent
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
-        // Redireciona de /admin para /admin/dashboard por padrão
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      },
-      {
-        // Carrega o DashboardComponent quando a URL for /admin/dashboard
         path: 'dashboard',
         loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.DashboardComponent)
       },
       {
-        // ROTA ADICIONADA: Carrega o componente para criar um novo produto
         path: 'produtos/novo',
         loadComponent: () => import('./features/admin/create-product/create-product.component').then(c => c.CreateProductComponent)
       },
@@ -57,10 +48,17 @@ export const routes: Routes = [
     ]
   },
 
-  // Rota de fallback: se o usuário acessar a raiz do site, redireciona para o login
+  // CORREÇÃO: A rota raiz agora é a loja (Storefront)
   {
     path: '',
-    redirectTo: '/login',
-    pathMatch: 'full'
-  },
+    loadComponent: () => import('./features/client/storefront-layout/storefront-layout.component').then(c => c.StorefrontLayoutComponent),
+    children: [
+      { path: '', redirectTo: 'menu', pathMatch: 'full' },
+      {
+        path: 'menu',
+        loadComponent: () => import('./features/client/menu/menu.component').then(c => c.MenuComponent)
+      }
+      // Outras rotas públicas (ex: acompanhar pedido) viriam aqui
+    ]
+  }
 ];

@@ -1,0 +1,35 @@
+<mat-sidenav-container class="storefront-container">
+  <!-- Sidenav para a Sacola -->
+  <mat-sidenav #cartSidenav mode="over" position="end" class="cart-sidenav">
+    <app-cart (closeCart)="toggleCart()"></app-cart>
+  </mat-sidenav>
+
+  <!-- Conteúdo Principal -->
+  <mat-sidenav-content>
+    <header class="main-header">
+      <nav>
+        <a href="#">Início</a>
+        <a href="#">Acompanhar pedido</a>
+      </nav>
+      <div class="social-icons">
+        <!-- Ícones de redes sociais -->
+      </div>
+    </header>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Barra Inferior "Ver Sacola" -->
+    <footer class="cart-footer" *ngIf="(cartItemCount$ | async)! > 0">
+      <div class="footer-content">
+        <span>{{ cartTotal$ | async | currency:'BRL' }}</span>
+        <button (click)="toggleCart()">
+          Ver sacola
+          <span class="item-count">{{ cartItemCount$ | async }} itens</span>
+        </button>
+      </div>
+    </footer>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
