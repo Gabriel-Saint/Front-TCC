@@ -1,0 +1,61 @@
+<div class="create-product-page">
+  <header class="page-header">
+    <h1>Cadastrar produto</h1>
+  </header>
+
+  <div class="form-container">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+      <!-- Campo de Imagem -->
+      <div class="form-row">
+        <label class="form-label">Imagem</label>
+        <div class="form-control">
+          <input type="file" hidden #fileInput (change)="onFileSelected($event)">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">Selecione</button>
+          <button mat-stroked-button type="button" color="warn" (click)="removeImage()" *ngIf="imagePreview">Remover</button>
+          <div class="image-preview" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Pré-visualização da imagem">
+          </div>
+        </div>
+      </div>
+
+      <!-- Campo de Categoria -->
+      <div class="form-row">
+        <label class="form-label" for="categoria">Categoria</label>
+        <div class="form-control">
+          <mat-form-field appearance="outline">
+            <mat-label>Selecione</mat-label>
+            <mat-select formControlName="categoria" id="categoria">
+              <mat-option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nome }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Campo de Preço -->
+      <div class="form-row">
+        <label class="form-label" for="preco">Preço</label>
+        <div class="form-control">
+          <mat-form-field appearance="outline">
+            <input matInput type="number" placeholder="0,00" formControlName="preco" id="preco">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Campo de Descrição -->
+      <div class="form-row">
+        <label class="form-label" for="descricao">Descrição</label>
+        <div class="form-control">
+          <mat-form-field appearance="outline">
+            <textarea matInput rows="5" formControlName="descricao" id="descricao"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Botão de Salvar -->
+      <div class="actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
