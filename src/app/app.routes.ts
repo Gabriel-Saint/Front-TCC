@@ -47,8 +47,7 @@ export const routes: Routes = [
       }
     ]
   },
-
-  // CORREÇÃO: A rota raiz agora é a loja (Storefront)
+  
   {
     path: '',
     loadComponent: () => import('./features/client/storefront-layout/storefront-layout.component').then(c => c.StorefrontLayoutComponent),
@@ -57,8 +56,16 @@ export const routes: Routes = [
       {
         path: 'menu',
         loadComponent: () => import('./features/client/menu/menu.component').then(c => c.MenuComponent)
+      },
+      {
+        path: 'acompanhar-pedido/:id',
+        loadComponent: () => import('./features/client/order-tracking/order-tracking.component').then(c => c.OrderTrackingComponent)
+      },
+      // ROTA ADICIONADA:
+      {
+        path: 'meus-pedidos',
+        loadComponent: () => import('./features/client/my-orders/my-orders.component').then(c => c.MyOrdersComponent)
       }
-      // Outras rotas públicas (ex: acompanhar pedido) viriam aqui
     ]
   }
 ];
