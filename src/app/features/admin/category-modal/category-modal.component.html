@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar' : 'Adicionar Nova' }} Categoria</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Nome da Categoria</mat-label>
+      <input matInput formControlName="name" cdkFocusInitial>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="form.invalid">Salvar</button>
+</mat-dialog-actions>

@@ -38,6 +38,7 @@ export class AdminLayoutComponent {
       label: 'Produtos', 
       icon: 'inventory_2',
       children: [
+        { path: 'categorias', label: 'Gerenciar Categorias' }, 
         { path: 'produtos', label: 'Listar Produtos' }, 
         { path: 'produtos/novo', label: 'Cadastrar Produto' }, 
       ]

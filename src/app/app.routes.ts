@@ -49,6 +49,10 @@ export const routes: Routes = [
       {
         path: 'produtos',
         loadComponent: () => import('./features/admin/products-list/products-list.component').then(c => c.ProductsListComponent)
+      },
+      {
+        path: 'categorias',
+        loadComponent: () => import('./features/admin/categories-list/categories-list.component').then(c => c.CategoriesListComponent)
       }
     ]
   },
