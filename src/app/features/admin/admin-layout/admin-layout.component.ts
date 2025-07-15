@@ -30,7 +30,7 @@ export class AdminLayoutComponent {
   // Objeto para controlar o estado (aberto/fechado) de cada submenu
   expandedStates: { [key: string]: boolean } = {};
 
-  // Nova estrutura de navegação com submenus
+ 
   navItems = [
     { path: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
     { path: 'pedidos', icon: 'shopping_cart', label: 'Pedidos' },

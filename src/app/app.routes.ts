@@ -15,14 +15,14 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./features/admin/admin-layout/admin-layout.component').then(c => c.AdminLayoutComponent),
-    
+
     // As rotas filhas serão carregadas dentro do <router-outlet> do AdminLayoutComponent
     children: [
       {
         // Redireciona de /admin para /admin/dashboard por padrão
-        path: '', 
-        redirectTo: 'dashboard', 
-        pathMatch: 'full' 
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
       },
       {
         // Carrega o DashboardComponent quando a URL for /admin/dashboard
@@ -33,6 +33,10 @@ export const routes: Routes = [
         // ROTA ADICIONADA: Carrega o componente para criar um novo produto
         path: 'produtos/novo',
         loadComponent: () => import('./features/admin/create-product/create-product.component').then(c => c.CreateProductComponent)
+      },
+      {
+        path: 'pedidos',
+        loadComponent: () => import('./features/admin/orders-list/orders-list.component').then(c => c.OrdersListComponent)
       }
     ]
   },

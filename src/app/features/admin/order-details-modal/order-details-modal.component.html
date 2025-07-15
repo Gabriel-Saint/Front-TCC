@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Detalhes do Pedido</h2>
+<mat-dialog-content class="mat-typography">
+  
+  <div class="order-header">
+    <span class="delivery-type">{{ order.deliveryType }}</span>
+    <span class="order-info">Pedido {{ order.id }} | {{ order.date | date:'dd/MM - HH:mm' }}</span>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="customer-details">
+    <h3>{{ order.customerName }}</h3>
+    <p>{{ order.customerPhone }}</p>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="items-list">
+    <div *ngFor="let item of order.items" class="order-item">
+      <span>{{ item.quantity }}x {{ item.name }}</span>
+      <span>{{ item.price | currency:'BRL' }}</span>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="summary">
+    <p><span>Entrega:</span> <span>R$ 0,00</span></p>
+    <p class="total"><span>Total:</span> <span>{{ order.total | currency:'BRL' }}</span></p>
+    <p class="payment-info">Método de pagamento: {{ order.paymentMethod }}</p>
+    <p class="payment-info">Status do pagamento: {{ order.paymentStatus }}</p>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="center" class="status-actions">
+  <button mat-stroked-button (click)="changeStatus('Aguardando')"><mat-icon>hourglass_empty</mat-icon> Aguardando</button>
+  <button mat-stroked-button (click)="changeStatus('Pendente')"><mat-icon>check</mat-icon> Pronto</button>
+  <button mat-stroked-button (click)="changeStatus('Finalizado')"><mat-icon>local_shipping</mat-icon> Em entrega</button>
+  <button mat-stroked-button (click)="changeStatus('Concluído')"><mat-icon>task_alt</mat-icon> Finalizado</button>
+  <button mat-stroked-button color="warn" (click)="changeStatus('Cancelado')"><mat-icon>delete</mat-icon> Cancelar</button>
+</mat-dialog-actions>
