@@ -13,10 +13,5 @@ export interface IAuthSignIn {
 }
 
 export interface IAuthResponse {
-  accessToken: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+    token: string; 
 }

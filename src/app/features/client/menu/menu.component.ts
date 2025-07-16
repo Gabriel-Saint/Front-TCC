@@ -3,9 +3,11 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Product, ProductsService } from '../../../core/services/products.service';
-import { Category, CategoriesService } from '../../../core/services/categories.service';
+import { ProductsService } from '../../../core/services/products.service';
+import { CategoryService} from '../../../core/services/categories.service';
 import { CartService } from '../../../core/services/cart.service';
+import { IProduct } from '../../../core/interfaces/product/product.interface';
+import { ICategory } from '../../../core/interfaces/category/category.interface';
 
 @Component({
   selector: 'app-menu',
@@ -16,9 +18,9 @@ import { CartService } from '../../../core/services/cart.service';
 })
 export class MenuComponent implements OnInit {
 
-  allProducts: Product[] = []; // Guarda a lista original de produtos
-  groupedProducts: { category: string, products: Product[] }[] = []; // Para exibição
-  categories: Category[] = [];
+  allProducts: IProduct[] = []; // Guarda a lista original de produtos
+  groupedProducts: { category: string, products: IProduct[] }[] = []; // Para exibição
+  categories: ICategory[] = [];
 
   // Propriedades para controlar o estado dos filtros
   searchText: string = '';
@@ -26,14 +28,14 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private categoriesService: CategoriesService,
+    private categoryService: CategoryService,
     private cartService: CartService
   ) { }
 
   ngOnInit(): void {
-    this.categoriesService.getCategories().subscribe(cats => {
+    this.categoryService.findAll().subscribe(cats => {
       this.categories = cats;
-      this.productsService.getProducts().subscribe(prods => {
+      this.productsService.findAll().subscribe(prods => {
         this.allProducts = prods; // Armazena a lista completa
         this.applyFilters(); // Aplica os filtros iniciais (mostra tudo)
       });
@@ -59,7 +61,7 @@ export class MenuComponent implements OnInit {
 
     // 1. Filtra pela categoria selecionada
     if (this.selectedCategory) {
-      filteredProducts = filteredProducts.filter(p => p.category === this.selectedCategory);
+      filteredProducts = filteredProducts.filter(p => String(p.categoryId) === this.selectedCategory);
     }
 
     // 2. Filtra pelo texto de busca
@@ -76,14 +78,14 @@ export class MenuComponent implements OnInit {
   }
 
   // Modificada para agrupar uma lista de produtos fornecida
-  groupProductsByCategory(productsToGroup: Product[]): void {
-    const productMap = new Map<string, Product[]>();
+  groupProductsByCategory(productsToGroup: IProduct[]): void {
+    const productMap = new Map<string, IProduct[]>();
 
     productsToGroup.forEach(product => {
-      if (!productMap.has(product.category)) {
-        productMap.set(product.category, []);
+      if (!productMap.has(String(product.categoryId))) {
+        productMap.set(String(product.categoryId), []);
       }
-      productMap.get(product.category)!.push(product);
+      productMap.get(String(product.categoryId))!.push(product);
     });
 
     // Atualiza a lista que o template está exibindo
@@ -93,7 +95,7 @@ export class MenuComponent implements OnInit {
     }));
   }
 
-  addToCart(product: Product): void {
+  addToCart(product: IProduct): void {
     this.cartService.addItem(product);
   }
 }

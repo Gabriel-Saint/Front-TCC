@@ -5,7 +5,8 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { User, UsersService } from '../../../core/services/users.service';
+import { UsersService } from '../../../core/services/users.service';
+import { IUser } from '../../../core/interfaces/user/user.interface';
 
 @Component({
   selector: 'app-edit-user-modal',
@@ -23,7 +24,7 @@ export class EditUserModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<EditUserModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public user: User,
+    @Inject(MAT_DIALOG_DATA) public user: IUser,
     private fb: FormBuilder,
     private usersService: UsersService
   ) {}
@@ -33,7 +34,7 @@ export class EditUserModalComponent implements OnInit {
       name: [this.user.name, Validators.required],
       cpf: [this.user.cpf, Validators.required],
       phone: [this.user.phone, Validators.required],
-      role: [this.user.role, Validators.required],
+      // role: [this.user.role, Validators.required],
       email: [this.user.email, [Validators.required, Validators.email]]
     });
   }
@@ -41,7 +42,7 @@ export class EditUserModalComponent implements OnInit {
   onSave(): void {
     if (this.editForm.valid) {
       const updatedUser = { ...this.user, ...this.editForm.value };
-      this.usersService.updateUser(updatedUser).subscribe(result => {
+      this.usersService.updateUser(this.user.id,updatedUser).subscribe(result => {
         this.dialogRef.close(result);
       });
     }

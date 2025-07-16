@@ -28,7 +28,7 @@ export class AuthService {
   login(payload: IAuthSignIn): Observable<IAuthResponse> {
     return this.http.post<IAuthResponse>(`${this.apiUrl}/signin`, payload).pipe(
       tap(response => {
-        this.setToken(response.accessToken);
+        this.setToken(response.token);
       })
     );
   }

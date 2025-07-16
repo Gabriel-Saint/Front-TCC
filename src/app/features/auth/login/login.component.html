@@ -24,22 +24,21 @@
         </div>
 
         <div class="form-group">
-          <label for="senha">Senha*</label>
+          <label for="password">Senha*</label>
           <input 
               type="password" 
-              id="senha" 
+              id="password" 
               placeholder="Digite a sua senha" 
-              formControlName="senha"> 
-          <div *ngIf="senha?.invalid && (senha?.dirty || senha?.touched)" class="error-message">
-            <small *ngIf="senha?.errors?.['required']">Senha é obrigatória.</small>
-            <small *ngIf="senha?.errors?.['minLength']">A senha deve ter no mínimo 6 caracteres.</small>
+              formControlName="password"> 
+          <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
+            <small *ngIf="password?.errors?.['required']">Senha é obrigatória.</small>
+            <small *ngIf="password?.errors?.['minLength']">A senha deve ter no mínimo 6 caracteres.</small>
           </div>
         </div>
 
         <button type="submit" class="btn-login" [disabled]="loginForm.invalid">Login</button>
       </form>
     </section>
-
 
     <section class="illustration-section"></section>
     

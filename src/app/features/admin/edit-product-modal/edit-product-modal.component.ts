@@ -6,7 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { Product, ProductsService } from '../../../core/services/products.service';
+import { ProductsService } from '../../../core/services/products.service';
+import { IProduct } from '../../../core/interfaces/product/product.interface';
 
 @Component({
   selector: 'app-edit-product-modal',
@@ -26,7 +27,7 @@ export class EditProductModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<EditProductModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public product: Product,
+    @Inject(MAT_DIALOG_DATA) public product: IProduct,
     private fb: FormBuilder,
     private productsService: ProductsService
   ) {}
@@ -34,12 +35,12 @@ export class EditProductModalComponent implements OnInit {
   ngOnInit(): void {
     this.editForm = this.fb.group({
       name: [this.product.name, Validators.required],
-      category: [this.product.category, Validators.required],
-      value: [this.product.value, [Validators.required, Validators.min(0.01)]],
+      category: [this.product.categoryId, Validators.required],
+      value: [this.product.price, [Validators.required, Validators.min(0.01)]],
       description: [this.product.description, Validators.required],
       image: [null] // Inicia como nulo, o usuário pode ou não trocar
     });
-    this.imagePreview = this.product.imageUrl; // Mostra a imagem atual
+    this.imagePreview = this.product.image; // Mostra a imagem atual
   }
 
   onFileSelected(event: Event): void {
@@ -63,7 +64,7 @@ export class EditProductModalComponent implements OnInit {
       const updatedProductData = { ...this.product, ...this.editForm.value };
       // Aqui você faria a lógica de upload da imagem se uma nova foi selecionada
       // e então chamaria o serviço
-      this.productsService.updateProduct(updatedProductData).subscribe(result => {
+      this.productsService.update(this.product.id,updatedProductData).subscribe(result => {
         this.dialogRef.close(result);
       });
     }

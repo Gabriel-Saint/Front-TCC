@@ -7,8 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { Product, ProductsService } from '../../../core/services/products.service';
+import { ProductsService } from '../../../core/services/products.service';
 import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
+import { IProduct } from '../../../core/interfaces/product/product.interface';
 
 @Component({
   selector: 'app-products-list',
@@ -23,7 +24,7 @@ import { EditProductModalComponent } from '../edit-product-modal/edit-product-mo
 export class ProductsListComponent implements OnInit {
 
   displayedColumns: string[] = ['code', 'name', 'value', 'category', 'actions'];
-  dataSource = new MatTableDataSource<Product>();
+  dataSource = new MatTableDataSource<IProduct>();
   isLoading = true;
 
   constructor(
@@ -33,7 +34,7 @@ export class ProductsListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.productsService.getProducts().subscribe(products => {
+    this.productsService.findAll().subscribe(products => {
       this.dataSource.data = products;
       this.isLoading = false;
     });
@@ -44,13 +45,13 @@ export class ProductsListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  openEditModal(product: Product): void {
+  openEditModal(product: IProduct): void {
     const dialogRef = this.dialog.open(EditProductModalComponent, {
       width: '600px',
       data: { ...product } // Passa uma cópia do produto para o modal
     });
 
-    dialogRef.afterClosed().subscribe((updatedProduct: Product) => {
+    dialogRef.afterClosed().subscribe((updatedProduct: IProduct) => {
       if (updatedProduct) {
         const index = this.dataSource.data.findIndex(p => p.id === updatedProduct.id);
         if (index > -1) {
@@ -62,9 +63,9 @@ export class ProductsListComponent implements OnInit {
     });
   }
 
-  deleteProduct(product: Product): void {
+  deleteProduct(product: IProduct): void {
     if (confirm(`Tem certeza que deseja apagar o produto ${product.name}?`)) {
-      this.productsService.deleteProduct(product.id).subscribe(() => {
+      this.productsService.remove(product.id).subscribe(() => {
         this.dataSource.data = this.dataSource.data.filter(p => p.id !== product.id);
       });
     }

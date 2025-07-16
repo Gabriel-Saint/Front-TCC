@@ -5,7 +5,8 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Category, CategoriesService } from '../../../core/services/categories.service';
+import {CategoryService } from '../../../core/services/categories.service';
+import { ICategory, ICategoryPayload } from '../../../core/interfaces/category/category.interface';
 
 @Component({
   selector: 'app-category-modal',
@@ -23,9 +24,9 @@ export class CategoryModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CategoryModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Category | null,
+    @Inject(MAT_DIALOG_DATA) public data: ICategory | null,
     private fb: FormBuilder,
-    private categoriesService: CategoriesService
+    private categoryService: CategoryService
   ) {
     this.isEditMode = !!this.data;
   }
@@ -45,11 +46,13 @@ export class CategoryModalComponent implements OnInit {
 
     if (this.isEditMode && this.data) {
       const updatedCategory = { ...this.data, name: categoryName };
-      this.categoriesService.updateCategory(updatedCategory).subscribe(result => {
+      this.categoryService.update(String(this.data.id), updatedCategory).subscribe(result => {
         this.dialogRef.close(result);
       });
     } else {
-      this.categoriesService.addCategory(categoryName).subscribe(result => {
+      const payload: ICategoryPayload = { name: this.form.value.name };
+      this.categoryService.create(payload).subscribe(result => {
+        console.log('Categoria criada:', result);
         this.dialogRef.close(result);
       });
     }

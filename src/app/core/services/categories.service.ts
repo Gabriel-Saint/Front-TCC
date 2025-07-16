@@ -1,52 +1,67 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-// Interface para definir a estrutura de uma Categoria
-export interface Category {
-  id: number;
-  name: string;
-}
+// Importando as interfaces que acabamos de definir
+import { ICategory, ICategoryPayload } from '../../core/interfaces/category/category.interface'; // Ajuste o caminho se necessário
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoriesService {
+export class CategoryService {
+  // Constrói a URL base da API de categorias a partir do arquivo de environment
+  private apiUrl = `${environment.apiUrl}/category`;
 
-  private mockCategories: Category[] = [
-    { id: 1, name: 'Lanches' },
-    { id: 2, name: 'Acompanhamentos' },
-    { id: 3, name: 'Bebidas' },
-    { id: 4, name: 'Sobremesas' },
-    { id: 5, name: 'Pizzas' },
-  ];
-  private nextId = 6;
+  constructor(private http: HttpClient) { }
 
-  constructor() { }
-
-  getCategories(): Observable<Category[]> {
-    return of(this.mockCategories).pipe(delay(300));
+  /**
+   * Busca todas as categorias da API.
+   * Corresponde a: GET /category
+   * @returns Um Observable com um array de categorias.
+   */
+  findAll(): Observable<ICategory[]> {
+    return this.http.get<ICategory[]>(this.apiUrl);
   }
 
-  addCategory(name: string): Observable<Category> {
-    const newCategory: Category = { id: this.nextId++, name };
-    this.mockCategories.push(newCategory);
-    console.log('Categoria adicionada:', newCategory);
-    return of(newCategory).pipe(delay(200));
+  /**
+   * Busca uma única categoria pelo seu ID.
+   * Corresponde a: GET /category/:id
+   * @param id O ID da categoria a ser buscada.
+   * @returns 
+   */
+  findOne(id: string): Observable<ICategory> {
+    return this.http.get<ICategory>(`${this.apiUrl}/${id}`);
   }
 
-  updateCategory(updatedCategory: Category): Observable<Category> {
-    const index = this.mockCategories.findIndex(c => c.id === updatedCategory.id);
-    if (index > -1) {
-      this.mockCategories[index] = updatedCategory;
-    }
-    console.log(`Categoria ${updatedCategory.id} atualizada.`);
-    return of(updatedCategory).pipe(delay(200));
+  /**
+   * Cria uma nova categoria.
+   * Corresponde a: POST /category
+   * @param payload
+   * @returns Um Observable com a categoria recém-criada.
+   */
+  create(payload: ICategoryPayload): Observable<ICategory> {
+    return this.http.post<ICategory>(this.apiUrl, payload);
   }
 
-  deleteCategory(categoryId: number): Observable<{ success: boolean }> {
-    this.mockCategories = this.mockCategories.filter(c => c.id !== categoryId);
-    console.log(`Categoria ${categoryId} deletada.`);
-    return of({ success: true }).pipe(delay(200));
+  /**
+   * Atualiza uma categoria existente.
+   * Corresponde a: PUT /category/:id
+   * @param id 
+   * @param payload
+   * @returns
+   */
+  update(id: string, payload: ICategoryPayload): Observable<ICategory> {
+    return this.http.put<ICategory>(`${this.apiUrl}/${id}`, payload);
+  }
+
+  /**
+   * Exclui uma categoria da API.
+   * Corresponde a: DELETE /category/:id
+   * @param id 
+   * @returns 
+   */
+  remove(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

@@ -19,10 +19,10 @@
     <!-- Etapa 1: Itens -->
     <div *ngIf="checkoutStep === 'items'" class="items-view">
       <div *ngFor="let item of (cartItems$ | async)" class="cart-item">
-        <img [src]="item.product.imageUrl" alt="">
+        <img [src]="item.product.image" alt="">
         <div class="item-details">
           <p>{{ item.quantity }}x {{ item.product.name }}</p>
-          <span>{{ item.product.value | currency:'BRL' }}</span>
+          <span>{{ item.product.price| currency:'BRL' }}</span>
         </div>
         <button mat-icon-button (click)="removeItem(item.product.id)">
           <mat-icon>delete</mat-icon>

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Product } from '../../core/services/products.service'; // Reutilizando a interface
+import { IProduct } from '../interfaces/product/product.interface';
 
 export interface CartItem {
-  product: Product;
+  product: IProduct;
   quantity: number;
 }
 
@@ -20,7 +20,7 @@ export class CartService {
 
   constructor() { }
 
-  addItem(product: Product): void {
+  addItem(product: IProduct): void {
     const currentItems = this.cartItems.getValue();
     const existingItem = currentItems.find(item => item.product.id === product.id);
 
@@ -44,7 +44,7 @@ export class CartService {
 
   getCartTotal(): Observable<number> {
     return this.cartItems$.pipe(
-      map(items => items.reduce((total, item) => total + (item.product.value * item.quantity), 0))
+      map(items => items.reduce((total, item) => total + (item.product.price * item.quantity), 0))
     );
   }
 }

@@ -7,8 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { Category, CategoriesService } from '../../../core/services/categories.service';
+import { CategoryService } from '../../../core/services/categories.service';
 import { CategoryModalComponent } from '../category-modal/category-modal.component';
+import { ICategory } from '../../../core/interfaces/category/category.interface';
 
 @Component({
   selector: 'app-categories-list',
@@ -23,16 +24,16 @@ import { CategoryModalComponent } from '../category-modal/category-modal.compone
 export class CategoriesListComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'actions'];
-  dataSource = new MatTableDataSource<Category>();
+  dataSource = new MatTableDataSource<ICategory>();
   isLoading = true;
 
   constructor(
-    private categoriesService: CategoriesService,
+    private categoryService: CategoryService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.categoriesService.getCategories().subscribe(categories => {
+    this.categoryService.findAll().subscribe(categories => {
       this.dataSource.data = categories;
       this.isLoading = false;
     });
@@ -43,13 +44,13 @@ export class CategoriesListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  openCategoryModal(category?: Category): void {
+  openCategoryModal(category?: ICategory): void {
     const dialogRef = this.dialog.open(CategoryModalComponent, {
       width: '400px',
       data: category ? { ...category } : null // Passa a categoria para editar, ou null para adicionar
     });
 
-    dialogRef.afterClosed().subscribe((result: Category) => {
+    dialogRef.afterClosed().subscribe((result: ICategory) => {
       if (result) {
         if (category) { // Editando
           const index = this.dataSource.data.findIndex(c => c.id === result.id);
@@ -65,9 +66,9 @@ export class CategoriesListComponent implements OnInit {
     });
   }
 
-  deleteCategory(category: Category): void {
+  deleteCategory(category: ICategory): void {
     if (confirm(`Tem certeza que deseja apagar a categoria "${category.name}"?`)) {
-      this.categoriesService.deleteCategory(category.id).subscribe(() => {
+      this.categoryService.remove(String(category.id)).subscribe(() => {
         this.dataSource.data = this.dataSource.data.filter(c => c.id !== category.id);
       });
     }

@@ -25,12 +25,12 @@
           <h3>{{ product.name }}</h3>
           <p class="description">{{ product.description }}</p>
           <div class="price-action">
-            <span class="price">{{ product.value | currency:'BRL' }}</span>
+            <span class="price">{{ product.price| currency:'BRL' }}</span>
             <button (click)="addToCart(product)">+ Adicionar a sacola</button>
           </div>
         </div>
         <div class="product-image">
-          <img [src]="product.imageUrl" [alt]="product.name">
+          <img [src]="product.image" [alt]="product.name">
         </div>
       </div>
     </div>
