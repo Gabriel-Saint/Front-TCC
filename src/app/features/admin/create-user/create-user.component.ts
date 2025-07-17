@@ -73,7 +73,7 @@ export class CreateUserComponent implements OnInit {
           alert('Usuário criado com sucesso!');
           console.log('Usuário criado com sucesso:', payload);
           
-          this.router.navigate(['/login']);
+          this.router.navigate(['admin/usuarios']);
         },
         error: (err) => {
         

@@ -6,8 +6,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+
+// 1. Importe tudo o que é necessário
+import { environment } from '../../../../environments/environment';
 import { ProductsService } from '../../../core/services/products.service';
-import { IProduct } from '../../../core/interfaces/product/product.interface';
+import { CategoryService } from '../../../core/services/categories.service';
+import { IProduct, IProductPayload } from '../../../core/interfaces/product/product.interface';
+import { ICategory } from '../../../core/interfaces/category/category.interface';
 
 @Component({
   selector: 'app-edit-product-modal',
@@ -22,25 +27,43 @@ import { IProduct } from '../../../core/interfaces/product/product.interface';
 export class EditProductModalComponent implements OnInit {
 
   editForm!: FormGroup;
+  // imagePreview pode ser uma URL completa ou um base64 de um novo ficheiro
   imagePreview: string | ArrayBuffer | null = null;
-  categorias = ['Lanches', 'Acompanhamentos', 'Bebidas', 'Sobremesas']; // Exemplo
+  categorias: ICategory[] = [];
+
+  // 2. Exponha a variável environment para ser usada no template
+  public environment = environment;
 
   constructor(
     public dialogRef: MatDialogRef<EditProductModalComponent>,
     @Inject(MAT_DIALOG_DATA) public product: IProduct,
     private fb: FormBuilder,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private categoryService: CategoryService // 3. Injete o CategoryService
   ) {}
 
   ngOnInit(): void {
+    this.loadCategories();
+
+    // 4. Inicialize o formulário com os nomes corretos dos campos
     this.editForm = this.fb.group({
       name: [this.product.name, Validators.required],
-      category: [this.product.categoryId, Validators.required],
-      value: [this.product.price, [Validators.required, Validators.min(0.01)]],
+      categoryId: [this.product.categoryId, Validators.required],
+      price: [this.product.price, [Validators.required, Validators.min(0.01)]],
       description: [this.product.description, Validators.required],
-      image: [null] // Inicia como nulo, o usuário pode ou não trocar
+      image: [null] // Inicia como nulo, só terá valor se o usuário escolher uma nova imagem
     });
-    this.imagePreview = this.product.image; // Mostra a imagem atual
+
+    // 5. Construa a URL completa da imagem atual para a pré-visualização inicial
+    if (this.product.image) {
+      this.imagePreview = this.environment.imageUrl + this.product.image;
+    }
+  }
+
+  loadCategories(): void {
+    this.categoryService.findAll().subscribe(cats => {
+      this.categorias = cats;
+    });
   }
 
   onFileSelected(event: Event): void {
@@ -53,19 +76,19 @@ export class EditProductModalComponent implements OnInit {
     }
   }
 
-  removeImage(): void {
-    this.editForm.patchValue({ image: null });
-    this.imagePreview = null;
-  }
-
   onSave(): void {
     if (this.editForm.valid) {
-      // Combina os dados originais com os do formulário
-      const updatedProductData = { ...this.product, ...this.editForm.value };
-      // Aqui você faria a lógica de upload da imagem se uma nova foi selecionada
-      // e então chamaria o serviço
-      this.productsService.update(this.product.id,updatedProductData).subscribe(result => {
-        this.dialogRef.close(result);
+      const payload: IProductPayload = this.editForm.value;
+
+      // Se o usuário não selecionou uma nova imagem, o campo 'image' será nulo.
+      // Removemos ele do payload para que o backend não tente processar uma imagem nula.
+      if (!payload.image) {
+        delete payload.image;
+      }
+
+      this.productsService.update(this.product.id, payload).subscribe(result => {
+        // Fecha o modal e retorna 'true' para indicar que a lista deve ser atualizada
+        this.dialogRef.close(true);
       });
     }
   }

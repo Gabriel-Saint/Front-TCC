@@ -5,11 +5,10 @@
     <div class="form-row image-row">
       <label class="form-label">Imagem</label>
       <div class="form-control">
-        <input type="file" hidden #fileInput (change)="onFileSelected($event)">
-        <button mat-stroked-button type="button" (click)="fileInput.click()">Selecione</button>
-        <button mat-stroked-button type="button" color="warn" (click)="removeImage()" *ngIf="imagePreview">Remover</button>
+        <input type="file" hidden #fileInput (change)="onFileSelected($event)" accept="image/*">
+        <button mat-stroked-button type="button" (click)="fileInput.click()">Trocar Imagem</button>
         <div class="image-preview" *ngIf="imagePreview">
-          <img [src]="imagePreview" alt="Pré-visualização">
+          <img [src]="imagePreview" alt="Pré-visualização do produto">
         </div>
       </div>
     </div>
@@ -21,13 +20,15 @@
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Categoria</mat-label>
-        <mat-select formControlName="category">
-          <mat-option *ngFor="let cat of categorias" [value]="cat">{{cat}}</mat-option>
+        <!-- CORREÇÃO: formControlName e iteração sobre o array de categorias -->
+        <mat-select formControlName="categoryId">
+          <mat-option *ngFor="let cat of categorias" [value]="cat.id">{{cat.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Preço</mat-label>
-        <input matInput type="number" formControlName="value" placeholder="0.00">
+        <!-- CORREÇÃO: formControlName atualizado -->
+        <input matInput type="number" formControlName="price" placeholder="0.00">
       </mat-form-field>
     </div>
     <mat-form-field appearance="outline" class="full-width">

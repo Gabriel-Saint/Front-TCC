@@ -1,73 +1,74 @@
 <div class="orders-page">
   <header class="page-header">
-    <h1>Pedidos</h1>
+    <h1>Gerenciar Pedidos</h1>
   </header>
 
-  <!-- Filtros -->
   <div class="filters-container">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Procurar pedido</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput [(ngModel)]="searchText" (input)="applyCombinedFilter()" />
+      <input matInput (keyup)="applyCombinedFilter()" [(ngModel)]="searchText" placeholder="ID, nome, telefone...">
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="date-field">
-      <mat-label>Data</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="applyCombinedFilter()" />
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrar por data</mat-label>
+      <input matInput [matDatepicker]="picker" (dateChange)="applyCombinedFilter()" [(ngModel)]="selectedDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="status-field">
-      <mat-label>Status</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrar por status</mat-label>
       <mat-select [(ngModel)]="selectedStatus" (selectionChange)="applyCombinedFilter()">
         <mat-option value="todos">Todos</mat-option>
-        <mat-option value="pendente">Pendente</mat-option>
-        <mat-option value="finalizado">Finalizado</mat-option>
-        <mat-option value="cancelado">Cancelado</mat-option>
+        <mat-option value="Pendente">Pendente</mat-option>
+        <mat-option value="Em Preparo">Em Preparo</mat-option>
+        <mat-option value="Saiu para Entrega">Saiu para Entrega</mat-option>
+        <mat-option value="Concluído">Concluído</mat-option>
+        <mat-option value="Cancelado">Cancelado</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
-  <!-- Tabela de Pedidos -->
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
 
       <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef><mat-checkbox></mat-checkbox></th>
-        <td mat-cell *matCellDef="let row"><mat-checkbox></mat-checkbox></td>
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox></mat-checkbox>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>Número</th>
-        <td mat-cell *matCellDef="let element">#{{ element.id }}</td>
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let order"> #{{order.id}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef>Data</th>
-        <td mat-cell *matCellDef="let element">{{ element.date | date:'dd/MM/yyyy' }}</td>
+      <ng-container matColumnDef="orderDate">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let order"> {{order.orderDate | date:'dd/MM/yyyy HH:mm'}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="customerName">
-        <th mat-header-cell *matHeaderCellDef>Cliente</th>
-        <td mat-cell *matCellDef="let element">{{ element.customerName }}</td>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Cliente </th>
+        <td mat-cell *matCellDef="let order"> {{order.name}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="customerPhone">
-        <th mat-header-cell *matHeaderCellDef>Telefone</th>
-        <td mat-cell *matCellDef="let element">{{ element.customerPhone }}</td>
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef> Telefone </th>
+        <td mat-cell *matCellDef="let order"> {{order.phone}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="items">
-        <th mat-header-cell *matHeaderCellDef>Itens</th>
-        <td mat-cell *matCellDef="let element">{{ element.items.length }}</td>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef> Total </th>
+        <td mat-cell *matCellDef="let order"> {{order.payments[0]?.total | currency:'BRL'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let element">
-          <span class="status-badge" [ngClass]="getStatusClass(element.status)">
-            {{ element.status }}
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let order">
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+            {{order.status}}
           </span>
         </td>
       </ng-container>

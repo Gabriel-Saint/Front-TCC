@@ -1,22 +1,17 @@
 <div class="menu-page">
-  <!-- Filtros -->
   <div class="filters">
     <div class="category-pills">
-      <!-- Botão para mostrar todas as categorias -->
       <button (click)="selectCategory(null)" [class.active]="!selectedCategory">Todos</button>
-      <!-- Botões para cada categoria -->
       <button *ngFor="let cat of categories" (click)="selectCategory(cat.name)" [class.active]="cat.name === selectedCategory">
         {{ cat.name }}
       </button>
     </div>
-    <!-- Campo de busca com o evento (keyup) -->
     <mat-form-field appearance="outline" class="search-field">
       <mat-icon matPrefix>search</mat-icon>
       <input matInput placeholder="Digite para pesquisar" (keyup)="applySearchFilter($event)">
     </mat-form-field>
   </div>
 
-  <!-- Lista de Produtos por Categoria (Nenhuma alteração aqui) -->
   <div *ngFor="let group of groupedProducts" class="category-section">
     <h2>{{ group.category }}</h2>
     <div class="products-grid">
@@ -25,18 +20,17 @@
           <h3>{{ product.name }}</h3>
           <p class="description">{{ product.description }}</p>
           <div class="price-action">
-            <span class="price">{{ product.price| currency:'BRL' }}</span>
+            <span class="price">{{ product.price | currency:'BRL' }}</span>
             <button (click)="addToCart(product)">+ Adicionar a sacola</button>
           </div>
         </div>
         <div class="product-image">
-          <img [src]="product.image" [alt]="product.name">
+          <img [src]="environment.imageUrl + product.image" [alt]="product.name">
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Mensagem para quando nenhum produto é encontrado -->
   <div *ngIf="groupedProducts.length === 0" class="no-results">
     <h3>Nenhum produto encontrado</h3>
     <p>Tente ajustar seus filtros de busca.</p>

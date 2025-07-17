@@ -12,35 +12,27 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 
-import { Order, OrdersService } from '../../../core/services/orders.service';
+import { IOrder } from '../../../core/interfaces/order/order.interface';
+import { OrdersService } from '../../../core/services/orders.service';
 import { OrderDetailsModalComponent } from '../order-details-modal/order-details-modal.component';
 
 @Component({
   selector: 'app-orders-list',
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    MatDialogModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
+    CommonModule, FormsModule, MatDialogModule, MatTableModule, MatFormFieldModule,
+    MatInputModule, MatIconModule, MatSelectModule, MatCheckboxModule, MatButtonModule,
+    MatDatepickerModule, MatNativeDateModule,
   ],
   templateUrl: './orders-list.component.html',
   styleUrls: ['./orders-list.component.scss'],
 })
 export class OrdersListComponent implements OnInit {
-  displayedColumns: string[] = ['select', 'id', 'date', 'customerName', 'customerPhone', 'items', 'status'];
-  dataSource = new MatTableDataSource<Order>();
+
+  displayedColumns: string[] = ['select', 'id', 'orderDate', 'name', 'phone', 'total', 'status'];
+  dataSource = new MatTableDataSource<IOrder>();
   isLoading = true;
 
-  // Filtros
   searchText: string = '';
   selectedDate: Date | null = null;
   selectedStatus: string = 'todos';
@@ -51,29 +43,36 @@ export class OrdersListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadOrders();
+  }
+
+  loadOrders(): void {
+    this.isLoading = true;
     this.ordersService.getOrders().subscribe((orders) => {
       this.dataSource.data = orders;
       this.isLoading = false;
-
-      // Filtro customizado
-      this.dataSource.filterPredicate = (data: Order, filter: string): boolean => {
-        const filters = JSON.parse(filter);
-
-        const matchesSearchText =
-          data.customerName.toLowerCase().includes(filters.searchText) ||
-          data.customerPhone.includes(filters.searchText) ||
-          data.id.toString().includes(filters.searchText);
-
-        const matchesStatus =
-          filters.selectedStatus === 'todos' || data.status === filters.selectedStatus;
-
-        const matchesDate =
-          !filters.selectedDate ||
-          new Date(data.date).toDateString() === new Date(filters.selectedDate).toDateString();
-
-        return matchesSearchText && matchesStatus && matchesDate;
-      };
+      this.setupFilterPredicate();
     });
+  }
+
+  setupFilterPredicate(): void {
+    this.dataSource.filterPredicate = (data: IOrder, filter: string): boolean => {
+      const filters = JSON.parse(filter);
+
+      const matchesSearchText =
+        data.name.toLowerCase().includes(filters.searchText) ||
+        data.phone.includes(filters.searchText) ||
+        data.id.toString().includes(filters.searchText);
+
+      const matchesStatus =
+        filters.selectedStatus === 'todos' || data.status === filters.selectedStatus;
+
+      const matchesDate =
+        !filters.selectedDate ||
+        new Date(data.orderDate).toDateString() === new Date(filters.selectedDate).toDateString();
+
+      return matchesSearchText && matchesStatus && matchesDate;
+    };
   }
 
   applyCombinedFilter(): void {
@@ -82,11 +81,10 @@ export class OrdersListComponent implements OnInit {
       selectedDate: this.selectedDate,
       selectedStatus: this.selectedStatus
     };
-
     this.dataSource.filter = JSON.stringify(filterObj);
   }
 
-  openOrderDetails(order: Order): void {
+  openOrderDetails(order: IOrder): void {
     const dialogRef = this.dialog.open(OrderDetailsModalComponent, {
       width: '500px',
       data: order,
@@ -95,17 +93,12 @@ export class OrdersListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const index = this.dataSource.data.findIndex(o => o.id === result.id);
-        if (index > -1) {
-          const updatedData = [...this.dataSource.data];
-          updatedData[index].status = result.newStatus;
-          this.dataSource.data = updatedData;
-        }
+        this.loadOrders();
       }
     });
   }
 
   getStatusClass(status: string): string {
-    return `status-${status.toLowerCase().replace(' ', '-')}`;
+    return `status-${status.toLowerCase().replace(/ /g, '-')}`;
   }
 }

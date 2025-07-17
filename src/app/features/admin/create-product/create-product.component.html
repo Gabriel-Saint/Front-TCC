@@ -6,11 +6,21 @@
   <div class="form-container">
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
 
-      <!-- Campo de Imagem -->
+
+      <div class="form-row">
+        <label class="form-label" for="name">Nome do Produto</label>
+        <div class="form-control">
+          <mat-form-field appearance="outline">
+            <input matInput formControlName="name" id="name" placeholder="Ex: Hambúrguer Clássico">
+          </mat-form-field>
+        </div>
+      </div>
+
+
       <div class="form-row">
         <label class="form-label">Imagem</label>
         <div class="form-control">
-          <input type="file" hidden #fileInput (change)="onFileSelected($event)">
+          <input type="file" hidden #fileInput (change)="onFileSelected($event)" accept="image/*">
           <button mat-stroked-button type="button" (click)="fileInput.click()">Selecione</button>
           <button mat-stroked-button type="button" color="warn" (click)="removeImage()" *ngIf="imagePreview">Remover</button>
           <div class="image-preview" *ngIf="imagePreview">
@@ -19,40 +29,45 @@
         </div>
       </div>
 
-      <!-- Campo de Categoria -->
       <div class="form-row">
-        <label class="form-label" for="categoria">Categoria</label>
+        <label class="form-label" for="categoryId">Categoria</label>
         <div class="form-control">
           <mat-form-field appearance="outline">
             <mat-label>Selecione</mat-label>
-            <mat-select formControlName="categoria" id="categoria">
-              <mat-option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nome }}</mat-option>
+            <mat-select formControlName="categoryId" id="categoryId">
+              <mat-option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.name }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
 
-      <!-- Campo de Preço -->
       <div class="form-row">
-        <label class="form-label" for="preco">Preço</label>
+        <label class="form-label" for="price">Preço</label>
         <div class="form-control">
           <mat-form-field appearance="outline">
-            <input matInput type="number" placeholder="0,00" formControlName="preco" id="preco">
+            <input matInput type="number" placeholder="0.00" formControlName="price" id="price">
           </mat-form-field>
         </div>
       </div>
 
-      <!-- Campo de Descrição -->
       <div class="form-row">
-        <label class="form-label" for="descricao">Descrição</label>
+        <label class="form-label" for="description">Descrição</label>
         <div class="form-control">
           <mat-form-field appearance="outline">
-            <textarea matInput rows="5" formControlName="descricao" id="descricao"></textarea>
+            <textarea matInput rows="4" formControlName="description" id="description"></textarea>
           </mat-form-field>
         </div>
       </div>
 
-      <!-- Botão de Salvar -->
+      <div class="form-row">
+        <label class="form-label">Visibilidade</label>
+        <div class="form-control">
+           <mat-slide-toggle formControlName="visibility" color="primary">
+             Visível no cardápio
+           </mat-slide-toggle>
+        </div>
+      </div>
+
       <div class="actions">
         <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid">Salvar</button>
       </div>

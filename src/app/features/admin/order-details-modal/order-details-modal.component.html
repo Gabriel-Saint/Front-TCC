@@ -1,38 +1,39 @@
-<h2 mat-dialog-title>Detalhes do Pedido</h2>
+<h2 mat-dialog-title>Detalhes do Pedido #{{ order.id }}</h2>
 <mat-dialog-content class="mat-typography">
   
   <div class="order-header">
-    <span class="delivery-type">{{ order.deliveryType }}</span>
-    <span class="order-info">Pedido {{ order.id }} | {{ order.date | date:'dd/MM - HH:mm' }}</span>
+    <span class="order-info">Pedido recebido em: {{ order.orderDate | date:'dd/MM/yyyy - HH:mm' }}</span>
   </div>
   <mat-divider></mat-divider>
 
   <div class="customer-details">
-    <h3>{{ order.customerName }}</h3>
-    <p>{{ order.customerPhone }}</p>
+    <h3>{{ order.name }}</h3>
+    <p><mat-icon>phone</mat-icon> {{ order.phone }}</p>
+    <p *ngIf="order.customerNote"><mat-icon>notes</mat-icon> <strong>Observação:</strong> {{ order.customerNote }}</p>
   </div>
   <mat-divider></mat-divider>
 
   <div class="items-list">
-    <div *ngFor="let item of order.items" class="order-item">
-      <span>{{ item.quantity }}x {{ item.name }}</span>
-      <span>{{ item.price | currency:'BRL' }}</span>
+    <h4>Itens do Pedido</h4>
+    <div *ngFor="let item of order.orderDetails" class="order-item">
+      <span>{{ item.quantity }}x Produto #{{ item.productId }}</span>
     </div>
   </div>
   <mat-divider></mat-divider>
 
-  <div class="summary">
-    <p><span>Entrega:</span> <span>R$ 0,00</span></p>
-    <p class="total"><span>Total:</span> <span>{{ order.total | currency:'BRL' }}</span></p>
-    <p class="payment-info">Método de pagamento: {{ order.paymentMethod }}</p>
-    <p class="payment-info">Status do pagamento: {{ order.paymentStatus }}</p>
+  <div class="summary" *ngIf="order.payments && order.payments.length > 0">
+    <h4>Resumo do Pagamento</h4>
+    <p><span>Taxa de Entrega:</span> <span>{{ order.payments[0].deliveryFee | currency:'BRL' }}</span></p>
+    <p class="total"><span>Total:</span> <span>{{ order.payments[0].total | currency:'BRL' }}</span></p>
+    <p class="payment-info">Método: {{ order.payments[0].type }}</p>
+    <p class="payment-info" *ngIf="order.payments[0].changeFor">Troco para: {{ order.payments[0].changeFor | currency:'BRL' }}</p>
   </div>
 
 </mat-dialog-content>
 <mat-dialog-actions align="center" class="status-actions">
-  <button mat-stroked-button (click)="changeStatus('Aguardando')"><mat-icon>hourglass_empty</mat-icon> Aguardando</button>
-  <button mat-stroked-button (click)="changeStatus('Pendente')"><mat-icon>check</mat-icon> Pronto</button>
-  <button mat-stroked-button (click)="changeStatus('Finalizado')"><mat-icon>local_shipping</mat-icon> Em entrega</button>
-  <button mat-stroked-button (click)="changeStatus('Concluído')"><mat-icon>task_alt</mat-icon> Finalizado</button>
-  <button mat-stroked-button color="warn" (click)="changeStatus('Cancelado')"><mat-icon>delete</mat-icon> Cancelar</button>
+  <button mat-stroked-button (click)="changeStatus('Pendente')"><mat-icon>hourglass_empty</mat-icon> Pendente</button>
+  <button mat-stroked-button (click)="changeStatus('Em Preparo')"><mat-icon>kitchen</mat-icon> Em Preparo</button>
+  <button mat-stroked-button (click)="changeStatus('Saiu para Entrega')"><mat-icon>local_shipping</mat-icon> Em Entrega</button>
+  <button mat-stroked-button (click)="changeStatus('Concluído')"><mat-icon>task_alt</mat-icon> Concluído</button>
+  <button mat-stroked-button color="warn" (click)="changeStatus('Cancelado')"><mat-icon>cancel</mat-icon> Cancelar</button>
 </mat-dialog-actions>

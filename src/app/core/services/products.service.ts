@@ -37,8 +37,9 @@ export class ProductsService {
    * @returns Um Observable com o produto recém-criado.
    */
   create(payload: IProductPayload): Observable<IProduct> {
+    console.log('Criando produto com payload:', payload);
     const formData = this.buildFormData(payload);
-    // A rota no backend para upload é 'products/upload'
+  
     return this.http.post<IProduct>(`${this.apiUrl}/upload`, formData);
   }
 

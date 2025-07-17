@@ -9,10 +9,13 @@
       <a class="order-summary-card" *ngFor="let order of orders" [routerLink]="['/acompanhar-pedido', order.id]">
         <div class="order-info">
           <span class="order-id">Pedido #{{ order.id }}</span>
-          <span class="order-date">{{ order.date | date:'dd/MM/yyyy' }}</span>
+          <span class="order-date">{{ order.orderDate | date:'dd/MM/yyyy' }}</span>
         </div>
         <div class="order-total">
-          {{ order.total | currency:'BRL' }}
+          <ng-container *ngIf="order.payments && order.payments.length > 0; else noTotal">
+            {{ order.payments[0].total | currency:'BRL' }}
+          </ng-container>
+          <ng-template #noTotal>-</ng-template>
         </div>
         <div class="order-status">
           <mat-icon>{{ getStatusIcon(order.status) }}</mat-icon>

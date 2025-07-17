@@ -38,9 +38,7 @@ export class UsersService {
    * @param userId O ID do usuário a ser excluído.
    */
   deleteUser(userId: number): Observable<void> {
-    // ATENÇÃO: Seu AuthController não tem uma rota DELETE.
-    // Você precisará criar uma no seu backend, por exemplo: DELETE /users/:id
-    // A linha abaixo é um exemplo de como seria a chamada.
-    return this.http.delete<void>(`${environment.apiUrl}/users/${userId}`);
+    console.log(`Deleting user with ID: ${userId}`);
+    return this.http.delete<void>(`${this.apiUrl}/${userId}`);
   }
 }

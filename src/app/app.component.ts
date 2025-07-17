@@ -6,7 +6,7 @@ import { AdminLayoutComponent } from "./features/admin/admin-layout/admin-layout
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoginComponent, RegisterComponent, AdminLayoutComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

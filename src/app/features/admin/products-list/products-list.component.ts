@@ -7,9 +7,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+
+// Serviços e Interfaces
 import { ProductsService } from '../../../core/services/products.service';
-import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
+import { CategoryService } from '../../../core/services/categories.service'; 
 import { IProduct } from '../../../core/interfaces/product/product.interface';
+import { ICategory } from '../../../core/interfaces/category/category.interface'; 
+import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
 
 @Component({
   selector: 'app-products-list',
@@ -29,13 +34,32 @@ export class ProductsListComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
+    private categoryService: CategoryService, // 3. Injete o CategoryService
     public dialog: MatDialog,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.productsService.findAll().subscribe(products => {
-      this.dataSource.data = products;
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.isLoading = true;
+    forkJoin({
+      products: this.productsService.findAll(),
+      categories: this.categoryService.findAll()
+    }).subscribe(({ products, categories }) => {
+
+      const categoryMap = new Map<number, string>();
+      categories.forEach(cat => categoryMap.set(cat.id, cat.name));
+      const productsWithCategoryName = products.map(product => ({
+        ...product,
+    
+        category: categoryMap.get(product.categoryId) || 'Não encontrada'
+      }));
+
+      this.dataSource.data = productsWithCategoryName as IProduct[];
+      console.log(productsWithCategoryName)
       this.isLoading = false;
     });
   }
@@ -47,18 +71,13 @@ export class ProductsListComponent implements OnInit {
 
   openEditModal(product: IProduct): void {
     const dialogRef = this.dialog.open(EditProductModalComponent, {
-      width: '600px',
-      data: { ...product } // Passa uma cópia do produto para o modal
+      width: '800px',
+      data: { ...product }
     });
 
-    dialogRef.afterClosed().subscribe((updatedProduct: IProduct) => {
-      if (updatedProduct) {
-        const index = this.dataSource.data.findIndex(p => p.id === updatedProduct.id);
-        if (index > -1) {
-          const currentData = this.dataSource.data;
-          currentData[index] = updatedProduct;
-          this.dataSource.data = currentData;
-        }
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.loadData();
       }
     });
   }
@@ -66,7 +85,8 @@ export class ProductsListComponent implements OnInit {
   deleteProduct(product: IProduct): void {
     if (confirm(`Tem certeza que deseja apagar o produto ${product.name}?`)) {
       this.productsService.remove(product.id).subscribe(() => {
-        this.dataSource.data = this.dataSource.data.filter(p => p.id !== product.id);
+        this.loadData();
+        alert('Produto apagado com sucesso!');
       });
     }
   }

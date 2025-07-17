@@ -3,12 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-// Imports do Angular Material para o formulário
+// Imports do Angular Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; // Import para o toggle de visibilidade
+
+// Serviços e Interfaces
+import { CategoryService } from '../../../core/services/categories.service';
+import { ProductsService } from '../../../core/services/products.service';
+import { IProduct, IProductPayload} from '../../../core/interfaces/product/product.interface'; 
+import { ICategory} from '../../../core/interfaces/category/category.interface'; 
 
 @Component({
   selector: 'app-create-product',
@@ -21,7 +28,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSlideToggleModule 
   ],
   templateUrl: './create-product.component.html',
   styleUrls: ['./create-product.component.scss']
@@ -30,36 +38,41 @@ export class CreateProductComponent implements OnInit {
 
   productForm!: FormGroup;
   imagePreview: string | ArrayBuffer | null = null;
-
-  // Dados mocados para as categorias 
-  categorias = [
-    { id: 1, nome: 'Lanches' },
-    { id: 2, nome: 'Bebidas' },
-    { id: 3, nome: 'Sobremesas' },
-  ];
+  categorias: ICategory[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
-    // private productService: ProductService // No futuro
+    private router: Router,
+    private categoryService: CategoryService,
+    private productsService: ProductsService
   ) { }
 
   ngOnInit(): void {
+
+    this.loadCategories();
+
     this.productForm = this.fb.group({
-      imagem: [null, Validators.required],
-      categoria: ['', Validators.required],
-      preco: ['', [Validators.required, Validators.min(0.01)]],
-      descricao: ['', [Validators.required, Validators.maxLength(500)]]
+      name: ['', Validators.required],
+      image: [null, Validators.required],
+      categoryId: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(0.01)]],
+      description: ['', [Validators.required, Validators.maxLength(500)]],
+      visibility: [true, Validators.required] // Valor padrão 'true'
+    });
+  }
+
+  loadCategories(): void {
+    this.categoryService.findAll().subscribe(cats => {
+      this.categorias = cats;
     });
   }
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      this.productForm.patchValue({ imagem: file });
-      this.productForm.get('imagem')?.updateValueAndValidity();
+      this.productForm.patchValue({ image: file });
+      this.productForm.get('image')?.updateValueAndValidity();
 
-      // Gera a pré-visualização da imagem
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
@@ -69,24 +82,32 @@ export class CreateProductComponent implements OnInit {
   }
 
   removeImage(): void {
-    this.productForm.patchValue({ imagem: null });
+    this.productForm.patchValue({ image: null });
     this.imagePreview = null;
   }
 
   onSubmit(): void {
-    if (this.productForm.valid) {
-      console.log('Formulário enviado:', this.productForm.value);
-      // Aqui você enviaria os dados para um serviço
-      // const formData = new FormData();
-      // Object.keys(this.productForm.value).forEach(key => {
-      //   formData.append(key, this.productForm.value[key]);
-      // });
-      // this.productService.create(formData).subscribe(() => ...);
-      
-      alert('Produto cadastrado com sucesso!'); // Apenas para demonstração
-      this.router.navigate(['/admin/produtos']); // Exemplo de navegação
-    } else {
+    if (this.productForm.invalid) {
       console.log('Formulário inválido.');
+      this.productForm.markAllAsTouched();
+      return;
     }
+
+    const payload: IProductPayload = this.productForm.value;
+
+    this.productsService.create(payload).subscribe({
+      
+      next: (createdProduct) => {
+        console.log('Criando produto com payload:', payload);
+        console.log('Produto cadastrado com sucesso!', createdProduct);
+        alert('Produto cadastrado com sucesso!');
+        this.router.navigate(['/admin/produtos']);
+      },
+      error: (err) => {
+        console.log('Erro:', payload);
+        console.error('Falha ao cadastrar produto:', err);
+        alert(`Falha no cadastro: ${err.error.message || 'Verifique os dados e tente novamente.'}`);
+      }
+    });
   }
 }

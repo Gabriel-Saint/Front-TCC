@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { Order, OrdersService } from '../../../core/services/orders.service';
+import {  OrdersService } from '../../../core/services/orders.service';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { IOrder } from '../../../core/interfaces/order/order.interface';
 
 @Component({
   selector: 'app-my-orders',
@@ -15,7 +16,7 @@ import { map } from 'rxjs/operators';
 })
 export class MyOrdersComponent implements OnInit {
 
-  myOrders$: Observable<Order[]> | undefined;
+  myOrders$: Observable<IOrder[]> | undefined;
 
   constructor(private ordersService: OrdersService) { }
 
@@ -24,21 +25,17 @@ export class MyOrdersComponent implements OnInit {
     if (orderIdsString) {
       const orderIds = JSON.parse(orderIdsString);
       if (orderIds && orderIds.length > 0) {
-        // Para cada ID, criamos uma chamada de "API".
-        // Em um app real, você teria um endpoint que aceita múltiplos IDs.
-        // Aqui, vamos simular buscando na lista completa.
         this.myOrders$ = this.ordersService.getOrders().pipe(
           map(allOrders => allOrders.filter(order => orderIds.includes(order.id)))
         );
       } else {
-        this.myOrders$ = of([]); // Retorna um array vazio se não houver IDs
+        this.myOrders$ = of([]); 
       }
     } else {
-      this.myOrders$ = of([]); // Retorna um array vazio se não houver nada no localStorage
+      this.myOrders$ = of([]);
     }
   }
 
-  // Função para dar um feedback visual do status
   getStatusIcon(status: string): string {
     switch (status) {
       case 'Concluído':
