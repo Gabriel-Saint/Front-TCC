@@ -16,7 +16,7 @@
   <div class="items-list">
     <h4>Itens do Pedido</h4>
     <div *ngFor="let item of order.orderDetails" class="order-item">
-      <span>{{ item.quantity }}x Produto #{{ item.productId }}</span>
+      <span>{{ item.quantity }}x Produto #{{ item.productName }}</span>
     </div>
   </div>
   <mat-divider></mat-divider>

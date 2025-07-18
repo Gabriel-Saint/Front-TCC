@@ -24,8 +24,7 @@ export class MenuComponent implements OnInit {
   categories: ICategory[] = [];
   searchText: string = '';
   selectedCategory: string | null = null;
-
-  // 2. Exponha a variável environment para o template
+  
   public environment = environment;
 
   constructor(

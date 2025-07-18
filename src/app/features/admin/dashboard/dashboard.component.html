@@ -1,4 +1,4 @@
-<div class="dashboard-page" id="dashboard-content" *ngIf="stats">
+<div class="dashboard-page" id="dashboard-content" *ngIf="dashboardData">
   <header class="page-header">
     <h1>Dashboard</h1>
     <button class="export-button" (click)="exportarPDF()">Exportar para pdf</button>
@@ -7,19 +7,19 @@
   <section class="stats-cards">
     <div class="stat-card">
       <p>Total de vendas</p>
-      <span><mat-icon>monetization_on</mat-icon> + {{ stats.totalVendas | currency:'BRL' }}</span>
+      <span><mat-icon>monetization_on</mat-icon> + {{ dashboardData.totalVendas | currency:'BRL' }}</span>
     </div>
     <div class="stat-card">
       <p>Total de pedidos</p>
-      <span><mat-icon>shopping_cart</mat-icon> + {{ stats.totalPedidos | number }}</span>
+      <span><mat-icon>shopping_cart</mat-icon> + {{ dashboardData.totalPedidos | number }}</span>
     </div>
     <div class="stat-card">
       <p>Produtos vendidos</p>
-      <span><mat-icon>inventory_2</mat-icon> + {{ stats.produtosVendidos | number }}</span>
+      <span><mat-icon>inventory_2</mat-icon> + {{ dashboardData.produtosVendidos | number }}</span>
     </div>
     <div class="stat-card">
       <p>Valor médio de vendas por dia</p>
-      <span><mat-icon>show_chart</mat-icon> + {{ stats.valorMedioVendas | currency:'BRL' }}</span>
+      <span><mat-icon>show_chart</mat-icon> + {{ dashboardData.valorMedioVendas | currency:'BRL' }}</span>
     </div>
   </section>
 
@@ -47,6 +47,5 @@
         yAxisLabel="Vendas (R$)">
       </ngx-charts-bar-vertical>
     </div>
-
   </section>
 </div>

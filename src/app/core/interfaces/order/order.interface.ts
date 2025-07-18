@@ -1,4 +1,5 @@
 import { IPayment } from "../payment/payment.interface";
+import { IProduct } from "../product/product.interface";
 
 export interface IOrderItem {
   productId: number;
@@ -16,5 +17,9 @@ export interface IOrder {
   status: 'Pendente' | 'Em Preparo' | 'Saiu para Entrega' | 'Concluído' | 'Cancelado' | string;
   orderDate: string; 
   orderDetails: IOrderItem[];
-  payments: IPayment[]; 
+  payments: IPayment[];
+}
+
+export interface IOrderCreationResponse {
+  order: IOrder;
 }

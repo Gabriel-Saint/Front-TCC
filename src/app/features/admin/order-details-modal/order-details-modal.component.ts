@@ -4,6 +4,7 @@ import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angu
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { environment } from '../../../../environments/environment'; 
 
 import { IOrder } from '../../../core/interfaces/order/order.interface';
 import { OrdersService } from '../../../core/services/orders.service';
@@ -17,16 +18,19 @@ import { OrdersService } from '../../../core/services/orders.service';
 })
 export class OrderDetailsModalComponent {
 
+  public environment = environment;
+
   constructor(
     public dialogRef: MatDialogRef<OrderDetailsModalComponent>,
     @Inject(MAT_DIALOG_DATA) public order: IOrder,
     private ordersService: OrdersService,
     private dialog: MatDialog
-  ) {}
+  ) {
+     console.log(order);
+  }
 
-  /**
-   * @param newStatus 
-   */
+ 
+
   changeStatus(newStatus: IOrder['status']): void {
     if (newStatus === 'Cancelado') {
       if (!confirm(`Tem certeza que deseja cancelar o pedido #${this.order.id}?`)) {

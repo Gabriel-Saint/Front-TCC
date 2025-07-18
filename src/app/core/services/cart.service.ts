@@ -12,10 +12,8 @@ export interface CartItem {
   providedIn: 'root'
 })
 export class CartService {
-  // BehaviorSubject guarda o estado atual da sacola e emite para quem estiver "ouvindo"
   private cartItems = new BehaviorSubject<CartItem[]>([]);
   
-  // Expondo os dados da sacola como um Observable (somente leitura)
   public cartItems$ = this.cartItems.asObservable();
 
   constructor() { }
@@ -25,14 +23,11 @@ export class CartService {
     const existingItem = currentItems.find(item => item.product.id === product.id);
 
     if (existingItem) {
-      // Se o item já existe, apenas aumenta a quantidade
       existingItem.quantity++;
     } else {
-      // Se não, adiciona o novo item
       currentItems.push({ product, quantity: 1 });
     }
 
-    // Emite o novo estado da sacola
     this.cartItems.next(currentItems);
   }
 
@@ -44,7 +39,11 @@ export class CartService {
 
   getCartTotal(): Observable<number> {
     return this.cartItems$.pipe(
-      map(items => items.reduce((total, item) => total + (item.product.price * item.quantity), 0))
+      map(items => items.reduce((total, item) => total + (Number(item.product.price) * item.quantity), 0))
     );
+  }
+
+  clearCart(): void {
+    this.cartItems.next([]);
   }
 }
