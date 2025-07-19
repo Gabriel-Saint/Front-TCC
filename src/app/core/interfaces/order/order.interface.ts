@@ -4,6 +4,12 @@ import { IProduct } from "../product/product.interface";
 export interface IOrderItem {
   productId: number;
   quantity: number;
+  product: IProduct;
+}
+
+export interface IOrderItemPayload {
+  productId: number;
+  quantity: number;
   productName?: string;
   productPrice?: number;
 }

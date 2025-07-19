@@ -15,8 +15,16 @@
 
   <div class="items-list">
     <h4>Itens do Pedido</h4>
+    <!-- CORREÇÃO: O loop agora exibe a imagem e o nome do produto corretamente -->
     <div *ngFor="let item of order.orderDetails" class="order-item">
-      <span>{{ item.quantity }}x Produto #{{ item.productName }}</span>
+      <img 
+        class="item-thumbnail"
+        [src]="environment.imageUrl + item.product.image" 
+        [alt]="item.product.name"
+      >
+      <div class="item-info">
+        <span>{{ item.quantity }}x {{ item.product.name }}</span>
+      </div>
     </div>
   </div>
   <mat-divider></mat-divider>

@@ -11,7 +11,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 // Serviços e Interfaces
 import { CartItem, CartService } from '../../../core/services/cart.service';
 import { CheckoutService } from '../../../core/services/checkout.service';
-import { IOrderItem } from '../../../core/interfaces/order/order.interface'; 
+import { IOrderItemPayload } from '../../../core/interfaces/order/order.interface'; 
 import { IPaymentPayload } from '../../../core/interfaces/payment/payment.interface';
 import { ICheckoutPayload } from '../../../core/interfaces/checkout/checkout.interface';
 
@@ -64,7 +64,6 @@ export class CartComponent implements OnInit {
   }
 
   goToStep(step: 'items' | 'checkout' | 'payment'): void {
-    // Valida o formulário antes de avançar para o pagamento
     if (step === 'payment' && this.checkoutForm.invalid) {
         this.checkoutForm.markAllAsTouched();
         alert('Por favor, preencha seus dados antes de prosseguir.');
@@ -90,7 +89,7 @@ export class CartComponent implements OnInit {
 
     const formValue = this.checkoutForm.value;
 
-    const itemsPayload: IOrderItem[] = items.map(item => ({
+    const itemsPayload: IOrderItemPayload[] = items.map(item => ({
       productId: item.product.id,
       quantity: item.quantity
     }));

@@ -1,4 +1,4 @@
-import { IOrderItem } from "../order/order.interface";
+import { IOrderItemPayload } from "../order/order.interface";
 import { IPaymentPayload } from "../payment/payment.interface";
 
 export interface ICheckoutPayload {
@@ -7,6 +7,6 @@ export interface ICheckoutPayload {
   address: string;
   cpf: string;
   customerNote?: string;
-  items: IOrderItem[];
+  items: IOrderItemPayload[];
   payment: IPaymentPayload;
 }
