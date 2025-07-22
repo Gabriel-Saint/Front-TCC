@@ -9,8 +9,18 @@
   <div class="customer-details">
     <h3>{{ order.name }}</h3>
     <p><mat-icon>phone</mat-icon> {{ order.phone }}</p>
-    <p *ngIf="order.customerNote"><mat-icon>notes</mat-icon> <strong>Observação:</strong> {{ order.customerNote }}</p>
   </div>
+
+  <div class="delivery-details">
+    <div *ngIf="order.deliveryType === 'Delivery' && order.address">
+      <h4><mat-icon>local_shipping</mat-icon> Endereço de Entrega</h4>
+      <p>{{ order.address }}</p>
+    </div>
+    <div *ngIf="order.deliveryType === 'Retirada'">
+      <h4><mat-icon>storefront</mat-icon> Retirar no Local</h4>
+    </div>
+  </div>
+
   <mat-divider></mat-divider>
 
   <div class="items-list">

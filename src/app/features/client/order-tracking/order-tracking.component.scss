@@ -40,9 +40,8 @@
   .status-indicator {
     width: 12px;
     height: 12px;
-    background-color: #2ecc71; // Verde
+    background-color: #2ecc71; 
     border-radius: 50%;
-    // Animação de pulsar
     animation: pulse 1.5s infinite ease-in-out;
   }
 

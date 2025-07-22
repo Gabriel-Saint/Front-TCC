@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 
 
 import { UsersService } from '../../../core/services/users.service';
-import { IUser } from '../../../core/interfaces/user/user.interface'; // Usando a nova interface
+import { IUser } from '../../../core/interfaces/user/user.interface'; 
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
 
 @Component({
@@ -25,9 +25,8 @@ import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.compo
 })
 export class UsersListComponent implements OnInit {
 
-  // As colunas correspondem às propriedades da interface IUser
-  displayedColumns: string[] = ['name', 'cpf', 'role', 'phone', 'actions'];
-  // 2. Use a interface IUser para o MatTableDataSource
+  displayedColumns: string[] = ['name', 'cpf', 'roles', 'phone', 'actions'];
+
   dataSource = new MatTableDataSource<IUser>();
   isLoading = true;
 
@@ -38,7 +37,6 @@ export class UsersListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 3. O método getUsers() agora busca os dados da sua API real
     this.usersService.getUsers().subscribe(users => {
       this.dataSource.data = users;
       this.isLoading = false;
@@ -69,7 +67,6 @@ export class UsersListComponent implements OnInit {
   }
 
   deleteUser(user: IUser): void {
-    // Lembre-se que você precisa implementar a rota DELETE no seu backend
     if (confirm(`Tem certeza que deseja apagar o usuário ${user.name}?`)) {
       this.usersService.deleteUser(user.id).subscribe({
         next: () => {
@@ -85,7 +82,12 @@ export class UsersListComponent implements OnInit {
   }
 
   goToRegister(): void {
-    // A rota para criar um usuário. Pode ser ajustada se necessário.
     this.router.navigate(['admin/usuarios/novo']);
+  }
+  formatRoles(user: IUser): string {
+    if (!user.userRoles || user.userRoles.length === 0) {
+      return 'Nenhuma Cadastrada';
+    }
+    return user.userRoles.map(ur => ur.role.name).join(', ');
   }
 }

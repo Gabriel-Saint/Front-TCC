@@ -1,39 +1,41 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio'; 
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, Subscription } from 'rxjs';
 
-// Serviços e Interfaces
 import { CartItem, CartService } from '../../../core/services/cart.service';
 import { CheckoutService } from '../../../core/services/checkout.service';
-import { IOrderItemPayload } from '../../../core/interfaces/order/order.interface'; 
+import { IOrderItemPayload } from '../../../core/interfaces/order/order.interface';
 import { IPaymentPayload } from '../../../core/interfaces/payment/payment.interface';
 import { ICheckoutPayload } from '../../../core/interfaces/checkout/checkout.interface';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
   imports: [
     CommonModule, CurrencyPipe, ReactiveFormsModule, MatIconModule, MatButtonModule,
-    MatFormFieldModule, MatInputModule, MatRadioModule
+    MatFormFieldModule, MatInputModule, MatRadioModule, MatButtonToggleModule
   ],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
+  public environment = environment;
   @Output() closeCart = new EventEmitter<void>();
 
   cartItems$: Observable<CartItem[]>;
   cartTotal$: Observable<number>;
   checkoutStep: 'items' | 'checkout' | 'payment' = 'items';
   checkoutForm!: FormGroup;
-
   deliveryFee = 5.00;
+  private deliveryTypeSub!: Subscription;
 
   constructor(
     private cartService: CartService,
@@ -45,18 +47,34 @@ export class CartComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Adicione todos os campos, incluindo os de pagamento, ao formulário
     this.checkoutForm = this.fb.group({
-      // Dados do cliente
       name: ['', Validators.required],
       phone: ['', Validators.required],
+      deliveryType: ['Delivery', Validators.required],
       address: ['', Validators.required],
       cpf: [''],
       customerNote: [''],
-      // Dados de pagamento
-      paymentType: ['Cash', Validators.required], // Valor inicial 'Cash'
-      changeFor: [null] // Campo para o troco, não obrigatório
+      paymentType: ['Cash', Validators.required],
+      changeFor: [null]
     });
+
+    this.deliveryTypeSub = this.checkoutForm.get('deliveryType')!.valueChanges.subscribe(type => {
+      const addressControl = this.checkoutForm.get('address');
+      if (type === 'Takeout') {
+        this.deliveryFee = 0;
+        addressControl?.clearValidators();
+      } else {
+        this.deliveryFee = 5.00;
+        addressControl?.setValidators(Validators.required);
+      }
+      addressControl?.updateValueAndValidity();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.deliveryTypeSub) {
+      this.deliveryTypeSub.unsubscribe();
+    }
   }
 
   removeItem(productId: number): void {
@@ -65,9 +83,9 @@ export class CartComponent implements OnInit {
 
   goToStep(step: 'items' | 'checkout' | 'payment'): void {
     if (step === 'payment' && this.checkoutForm.invalid) {
-        this.checkoutForm.markAllAsTouched();
-        alert('Por favor, preencha seus dados antes de prosseguir.');
-        return;
+      this.checkoutForm.markAllAsTouched();
+      alert('Por favor, preencha seus dados antes de prosseguir.');
+      return;
     }
     this.checkoutStep = step;
   }
@@ -105,7 +123,8 @@ export class CartComponent implements OnInit {
     const checkoutPayload: ICheckoutPayload = {
       name: formValue.name,
       phone: formValue.phone,
-      address: formValue.address,
+      deliveryType: formValue.deliveryType,
+      address: formValue.deliveryType === 'Delivery' ? formValue.address : '',
       cpf: formValue.cpf,
       customerNote: formValue.customerNote,
       items: itemsPayload,

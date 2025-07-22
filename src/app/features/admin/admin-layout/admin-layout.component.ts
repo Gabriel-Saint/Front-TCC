@@ -51,9 +51,14 @@ export class AdminLayoutComponent {
         { path: 'usuarios/novo', label: 'Adicionar Novo' },
       ]
     },
+     { 
+      label: 'Funções', 
+      icon: 'admin_panel_settings', 
+      children: [
+        { path: 'roles', label: 'Listar Funções' },
+      ]
+    },
   ];
-
-  // Função para abrir/fechar o submenu
   toggleSubmenu(label: string): void {
     this.expandedStates[label] = !this.expandedStates[label];
   }

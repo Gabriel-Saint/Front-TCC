@@ -22,6 +22,8 @@ export interface IOrder {
   customerNote?: string;
   status: 'Pendente' | 'Em Preparo' | 'Saiu para Entrega' | 'Concluído' | 'Cancelado' | string;
   orderDate: string; 
+  deliveryType: 'Delivery' | 'Retirada';
+  address?: string | null; 
   orderDetails: IOrderItem[];
   payments: IPayment[];
 }

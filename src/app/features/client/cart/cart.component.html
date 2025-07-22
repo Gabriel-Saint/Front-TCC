@@ -16,7 +16,7 @@
   <div class="cart-content">
     <div *ngIf="checkoutStep === 'items'" class="items-view">
       <div *ngFor="let item of (cartItems$ | async)" class="cart-item">
-        <img [src]="item.product.image" alt="">
+        <img [src]="environment.imageUrl + item.product.image" alt="">
         <div class="item-details">
           <p>{{ item.quantity }}x {{ item.product.name }}</p>
           <span>{{ item.product.price | currency:'BRL' }}</span>
@@ -29,6 +29,12 @@
 
     <div *ngIf="checkoutStep === 'checkout' || checkoutStep === 'payment'" [hidden]="checkoutStep !== 'checkout'" class="checkout-view">
       <form [formGroup]="checkoutForm">
+        <h3>Como você quer receber?</h3>
+        <mat-button-toggle-group formControlName="deliveryType" class="delivery-toggle">
+          <mat-button-toggle value="Delivery"><mat-icon>local_shipping</mat-icon> Entrega</mat-button-toggle>
+          <mat-button-toggle value="Takeout"><mat-icon>storefront</mat-icon> Retirar</mat-button-toggle>
+        </mat-button-toggle-group>
+
         <h3>Seus Dados</h3>
         <mat-form-field appearance="outline">
           <mat-label>Nome Completo</mat-label>
@@ -38,10 +44,12 @@
           <mat-label>Telefone (WhatsApp)</mat-label>
           <input matInput formControlName="phone">
         </mat-form-field>
-        <mat-form-field appearance="outline">
+
+        <mat-form-field appearance="outline" *ngIf="checkoutForm.get('deliveryType')?.value === 'Delivery'">
           <mat-label>Endereço de Entrega</mat-label>
           <input matInput formControlName="address">
         </mat-form-field>
+        
         <mat-form-field appearance="outline">
           <mat-label>CPF na nota (opcional)</mat-label>
           <input matInput formControlName="cpf">

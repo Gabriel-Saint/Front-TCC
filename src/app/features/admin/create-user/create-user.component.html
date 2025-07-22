@@ -27,10 +27,14 @@
         </mat-form-field>
       </div>
 
-      <!-- <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Função</mat-label>
-        <input matInput formControlName="funcao">
-      </mat-form-field> -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Funções</mat-label>
+        <mat-select formControlName="roleIds" multiple>
+          <mat-option *ngFor="let role of allRoles" [value]="role.id">
+            {{ role.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
       <div class="form-row">
         <mat-form-field appearance="outline">
@@ -40,7 +44,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Confirmar Senha</mat-label>
           <input matInput type="password" formControlName="confirmacaoSenha">
-           <mat-error *ngIf="userForm.errors?.['passwordMismatch'] && userForm.get('confirmacaoSenha')?.touched">
+            <mat-error *ngIf="userForm.errors?.['passwordMismatch'] && userForm.get('confirmacaoSenha')?.touched">
             As senhas não coincidem.
           </mat-error>
         </mat-form-field>

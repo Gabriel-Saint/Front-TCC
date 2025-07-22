@@ -46,7 +46,11 @@ export const routes: Routes = [
       {
         path: 'categorias',
         loadComponent: () => import('./features/admin/categories-list/categories-list.component').then(c => c.CategoriesListComponent)
-      }
+      },
+       {
+        path: 'roles', 
+        loadComponent: () => import('./features/admin/roles-list/roles-list.component').then(c => c.RolesListComponent)
+      },
     ]
   },
   
@@ -63,7 +67,6 @@ export const routes: Routes = [
         path: 'acompanhar-pedido/:id',
         loadComponent: () => import('./features/client/order-tracking/order-tracking.component').then(c => c.OrderTrackingComponent)
       },
-      // ROTA ADICIONADA:
       {
         path: 'meus-pedidos',
         loadComponent: () => import('./features/client/my-orders/my-orders.component').then(c => c.MyOrdersComponent)

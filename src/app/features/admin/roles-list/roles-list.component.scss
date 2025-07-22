@@ -1,0 +1,39 @@
+.roles-page {
+  padding: 1rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+}
+
+.filters-container {
+  margin-bottom: 1.5rem;
+}
+
+.table-container {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+:host ::ng-deep {
+  .edit-btn {
+    background-color: #ecf0f1;
+    color: #34495e;
+    margin-right: 8px;
+  }
+
+  .delete-btn {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+}

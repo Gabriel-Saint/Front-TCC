@@ -5,6 +5,7 @@ export interface IAuthSignUp {
   password: string;
   cpf: string;
   phone: string;
+  roleIds?: number[];
 }
 
 export interface IAuthSignIn {

@@ -1,3 +1,4 @@
+import { IUserRole } from "../role/role.interface";
 
 export interface IUser {
   id: number;
@@ -5,13 +6,13 @@ export interface IUser {
   email: string;
   cpf: string;
   phone: string;
-  
+  userRoles?: IUserRole[]
 }
 
 export interface IUserUpdatePayload {
   name?: string;
   email?: string;
-  password?: string; // Incluído caso a atualização de senha seja permitida
+  password?: string;
   cpf?: string;
   phone?: string;
 }
