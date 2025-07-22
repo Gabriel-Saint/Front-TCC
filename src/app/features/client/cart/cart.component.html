@@ -32,7 +32,7 @@
         <h3>Como você quer receber?</h3>
         <mat-button-toggle-group formControlName="deliveryType" class="delivery-toggle">
           <mat-button-toggle value="Delivery"><mat-icon>local_shipping</mat-icon> Entrega</mat-button-toggle>
-          <mat-button-toggle value="Takeout"><mat-icon>storefront</mat-icon> Retirar</mat-button-toggle>
+          <mat-button-toggle value="Retirada"><mat-icon>storefront</mat-icon> Retirar</mat-button-toggle>
         </mat-button-toggle-group>
 
         <h3>Seus Dados</h3>
@@ -70,12 +70,12 @@
       <form [formGroup]="checkoutForm">
         <h3>Forma de Pagamento</h3>
         <mat-radio-group formControlName="paymentType" class="payment-options">
-          <mat-radio-button value="Cash">Dinheiro</mat-radio-button>
-          <mat-radio-button value="Card">Cartão na Entrega</mat-radio-button>
+          <mat-radio-button value="Dinheiro">Dinheiro</mat-radio-button>
+          <mat-radio-button value="Cartão">Cartão na Entrega</mat-radio-button>
           <mat-radio-button value="Pix">Pix</mat-radio-button>
         </mat-radio-group>
 
-        <mat-form-field appearance="outline" *ngIf="checkoutForm.get('paymentType')?.value === 'Cash'">
+        <mat-form-field appearance="outline" *ngIf="checkoutForm.get('paymentType')?.value === 'Dinheiro'">
           <mat-label>Precisa de troco para quanto? (opcional)</mat-label>
           <input matInput type="number" formControlName="changeFor">
         </mat-form-field>
