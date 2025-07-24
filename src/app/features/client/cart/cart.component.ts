@@ -11,6 +11,7 @@ import { Observable, firstValueFrom, Subscription } from 'rxjs';
 
 import { CartItem, CartService } from '../../../core/services/cart.service';
 import { CheckoutService } from '../../../core/services/checkout.service';
+import { MercadoPagoService } from '../../../core/services/mercado-pago.service';
 import { IOrderItemPayload } from '../../../core/interfaces/order/order.interface';
 import { IPaymentPayload } from '../../../core/interfaces/payment/payment.interface';
 import { ICheckoutPayload } from '../../../core/interfaces/checkout/checkout.interface';
@@ -34,12 +35,13 @@ export class CartComponent implements OnInit, OnDestroy {
   cartTotal$: Observable<number>;
   checkoutStep: 'items' | 'checkout' | 'payment' = 'items';
   checkoutForm!: FormGroup;
-  deliveryFee = 5.00;
+  deliveryFee = 0.00;
   private deliveryTypeSub!: Subscription;
 
   constructor(
     private cartService: CartService,
     private checkoutService: CheckoutService,
+    private mercadoPagoService: MercadoPagoService,
     private fb: FormBuilder
   ) {
     this.cartItems$ = this.cartService.cartItems$;
@@ -54,17 +56,23 @@ export class CartComponent implements OnInit, OnDestroy {
       address: ['', Validators.required],
       cpf: [''],
       customerNote: [''],
-      paymentType: ['Cash', Validators.required],
+      paymentType: ['Dinheiro', Validators.required],
       changeFor: [null]
     });
 
     this.deliveryTypeSub = this.checkoutForm.get('deliveryType')!.valueChanges.subscribe(type => {
       const addressControl = this.checkoutForm.get('address');
-      if (type === 'Takeout') {
+      const paymentTypeControl = this.checkoutForm.get('paymentType');
+
+      if (type === 'Retirada') {
         this.deliveryFee = 0;
         addressControl?.clearValidators();
+        addressControl?.setValue('');
+        if (paymentTypeControl?.value === 'MercadoPago') {
+          paymentTypeControl.setValue('Dinheiro');
+        }
       } else {
-        this.deliveryFee = 5.00;
+        this.deliveryFee = 0;
         addressControl?.setValidators(Validators.required);
       }
       addressControl?.updateValueAndValidity();
@@ -117,7 +125,7 @@ export class CartComponent implements OnInit, OnDestroy {
       deliveryFee: this.deliveryFee,
       subtotal: subtotal,
       total: subtotal + this.deliveryFee,
-      changeFor: formValue.paymentType === 'Cash' ? formValue.changeFor : undefined,
+      changeFor: formValue.paymentType === 'Dinheiro' ? formValue.changeFor : undefined,
     };
 
     const checkoutPayload: ICheckoutPayload = {
@@ -131,19 +139,31 @@ export class CartComponent implements OnInit, OnDestroy {
       payment: paymentPayload
     };
 
-    this.checkoutService.createOrder(checkoutPayload).subscribe({
-      next: (response) => {
-        alert(`Pedido #${response.order.id} enviado com sucesso!`);
-        this.cartService.clearCart();
-        const myOrderIds = JSON.parse(localStorage.getItem('my_order_ids') || '[]');
-        myOrderIds.push(response.order.id);
-        localStorage.setItem('my_order_ids', JSON.stringify(myOrderIds));
-        this.closeCart.emit();
-      },
-      error: (err) => {
-        console.error('Erro ao criar pedido:', err);
-        alert(`Ocorreu um erro: ${err.error.message || 'Tente novamente.'}`);
-      }
-    });
+    if (formValue.paymentType === 'MercadoPago') {
+      this.mercadoPagoService.createPreference(checkoutPayload).subscribe({
+        next: (response) => {
+          window.location.href = response.checkoutUrl;
+        },
+        error: (err) => {
+          console.error('Erro ao criar preferência de pagamento:', err);
+          alert('Não foi possível iniciar o pagamento online. Tente novamente.');
+        }
+      });
+    } else {
+      this.checkoutService.createOrder(checkoutPayload).subscribe({
+        next: (response) => {
+          alert(`Pedido #${response.order.id} enviado com sucesso!`);
+          this.cartService.clearCart();
+          const myOrderIds = JSON.parse(localStorage.getItem('my_order_ids') || '[]');
+          myOrderIds.push(response.order.id);
+          localStorage.setItem('my_order_ids', JSON.stringify(myOrderIds));
+          this.closeCart.emit();
+        },
+        error: (err) => {
+          console.error('Erro ao criar pedido:', err);
+          alert(`Ocorreu um erro: ${err.error.message || 'Tente novamente.'}`);
+        }
+      });
+    }
   }
 }

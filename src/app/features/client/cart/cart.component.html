@@ -71,8 +71,9 @@
         <h3>Forma de Pagamento</h3>
         <mat-radio-group formControlName="paymentType" class="payment-options">
           <mat-radio-button value="Dinheiro">Dinheiro</mat-radio-button>
-          <mat-radio-button value="Cartão">Cartão na Entrega</mat-radio-button>
+          <mat-radio-button value="Cartão">Cartão</mat-radio-button>
           <mat-radio-button value="Pix">Pix</mat-radio-button>
+          <mat-radio-button value="MercadoPago" *ngIf="checkoutForm.get('deliveryType')?.value === 'Delivery'">Pagar Online com Mercado Pago</mat-radio-button>
         </mat-radio-group>
 
         <mat-form-field appearance="outline" *ngIf="checkoutForm.get('paymentType')?.value === 'Dinheiro'">

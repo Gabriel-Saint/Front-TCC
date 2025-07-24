@@ -47,13 +47,17 @@ export const routes: Routes = [
         path: 'categorias',
         loadComponent: () => import('./features/admin/categories-list/categories-list.component').then(c => c.CategoriesListComponent)
       },
-       {
-        path: 'roles', 
+      {
+        path: 'roles',
         loadComponent: () => import('./features/admin/roles-list/roles-list.component').then(c => c.RolesListComponent)
+      },
+      {
+        path: 'pagamento/:status', 
+        loadComponent: () => import('./features/client/payment-status/payment-status.component').then(c => c.PaymentStatusComponent)
       },
     ]
   },
-  
+
   {
     path: '',
     loadComponent: () => import('./features/client/storefront-layout/storefront-layout.component').then(c => c.StorefrontLayoutComponent),

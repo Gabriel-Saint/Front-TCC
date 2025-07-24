@@ -30,7 +30,6 @@
   padding: 1rem;
 }
 
-// Estilos da Etapa 1: Itens
 .cart-item {
   display: flex;
   align-items: center;
@@ -51,7 +50,6 @@
   }
 }
 
-// Estilos da Etapa 2 e 3
 .checkout-view, .payment-view {
   h3 {
     font-size: 1.2rem;
@@ -91,5 +89,14 @@
     width: 100%;
     padding: 1rem 0;
     font-size: 1rem;
+  }
+}
+
+.delivery-toggle {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  
+  .mat-button-toggle {
+    flex: 1;
   }
 }

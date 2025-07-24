@@ -1,0 +1,28 @@
+<div class="status-page-container" *ngIf="status$ | async as status">
+  <div class="status-card" [ngClass]="status">
+    <ng-container [ngSwitch]="status">
+      
+      <div *ngSwitchCase="'sucesso'" class="status-content">
+        <mat-icon class="status-icon">check_circle</mat-icon>
+        <h1>Pagamento Aprovado!</h1>
+        <p>O seu pedido foi recebido e já está a ser preparado. Você pode acompanhar o status em tempo real.</p>
+        <a mat-raised-button color="primary" routerLink="/meus-pedidos">Acompanhar Meus Pedidos</a>
+      </div>
+
+      <div *ngSwitchCase="'falha'" class="status-content">
+        <mat-icon class="status-icon">error</mat-icon>
+        <h1>Pagamento Recusado</h1>
+        <p>Não foi possível processar o seu pagamento. Por favor, verifique os seus dados e tente novamente.</p>
+        <a mat-raised-button color="warn" routerLink="/cardapio">Voltar ao Cardápio</a>
+      </div>
+
+      <div *ngSwitchCase="'pendente'" class="status-content">
+        <mat-icon class="status-icon">hourglass_empty</mat-icon>
+        <h1>Pagamento Pendente</h1>
+        <p>O seu pagamento ainda está a ser processado. Assim que for aprovado, o seu pedido entrará em preparação.</p>
+        <a mat-raised-button routerLink="/meus-pedidos">Ver Meus Pedidos</a>
+      </div>
+
+    </ng-container>
+  </div>
+</div>
