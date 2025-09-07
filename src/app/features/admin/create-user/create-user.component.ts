@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { forkJoin, switchMap } from 'rxjs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { RolesService } from '../../../core/services/role.service';
 import { IRole } from '../../../core/interfaces/role/role.interface';
+import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalData } from '../../../core/interfaces/modal/confirmation-modal.interface';
+import { IAuthSignUp } from '../../../core/interfaces/auth/auth.inteface';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -25,6 +29,7 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -42,7 +47,8 @@ export class CreateUserComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private rolesService: RolesService
+    private rolesService: RolesService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -69,25 +75,71 @@ export class CreateUserComponent implements OnInit {
       return;
     }
     
-    const { roleIds, confirmacaoSenha, ...userPayload } = this.userForm.value;
+    const formValue = this.userForm.value;
 
-    this.authService.register(userPayload).pipe(
-      switchMap((response) => {
-        const userId = response.user.id;
-        if (roleIds && roleIds.length > 0) {
-          return this.authService.setUserRoles(userId, roleIds);
-        }
-        return forkJoin([]);
-      })
-    ).subscribe({
+    const payload: IAuthSignUp = {
+      name: formValue.name,
+      email: formValue.email,
+      password: formValue.password,
+      cpf: String(formValue.cpf).replace(/\D/g, ''),
+      phone: String(formValue.phone).replace(/\D/g, ''),
+      roleIds: formValue.roleIds
+    };
+
+    this.authService.register(payload).subscribe({
       next: () => {
-        alert('Usuário criado e funções atribuídas com sucesso!');
-        this.router.navigate(['admin/usuarios']);
+        this.showSuccessModal();
       },
-      error: (err) => {
-        console.error('Erro ao criar usuário:', err);
-        alert(`Falha no registro: ${err.error.message || 'Tente novamente.'}`);
+      error: (err: HttpErrorResponse) => {
+        this.showErrorModal(err);
       }
     });
   }
+
+  showSuccessModal(): void {
+    const dialogData: ConfirmationModalData = {
+      title: 'Usuário Criado com Sucesso!',
+      message: 'O novo usuário foi criado e as funções foram atribuídas.',
+      icon: 'check_circle',
+      confirmButtonText: 'OK'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+      width: '400px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['admin/usuarios']);
+    });
+  }
+
+  private showErrorModal(error: HttpErrorResponse): void {
+    let message = 'Ocorreu um erro ao criar o usuário. Tente novamente.';
+
+    if (error.error && Array.isArray(error.error.message)) {
+      const errorMessages = error.error.message.join(', ');
+      
+      if (errorMessages.toLowerCase().includes('cpf')) {
+        message = 'CPF preenchido incorretamente. Verifique se possui 11 dígitos e contém apenas números.';
+      } else {
+        message = errorMessages;
+      }
+    } else if (error.error && typeof error.error.message === 'string') {
+      message = error.error.message;
+    }
+
+    const dialogData: ConfirmationModalData = {
+      title: 'Falha no Registro',
+      message: message,
+      icon: 'error',
+      confirmButtonText: 'OK'
+    };
+
+    this.dialog.open(ConfirmationModalComponent, {
+      width: '400px',
+      data: dialogData
+    });
+  }
 }
+

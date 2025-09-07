@@ -10,8 +10,10 @@ import { Router } from '@angular/router';
 
 
 import { UsersService } from '../../../core/services/users.service';
-import { IUser } from '../../../core/interfaces/user/user.interface'; 
+import { IUser } from '../../../core/interfaces/user/user.interface';
 import { EditUserModalComponent } from '../edit-user-modal/edit-user-modal.component';
+import { ConfirmationModalData } from '../../../core/interfaces/modal/confirmation-modal.interface';
+import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-users-list',
@@ -71,7 +73,7 @@ export class UsersListComponent implements OnInit {
       this.usersService.deleteUser(user.id).subscribe({
         next: () => {
           this.dataSource.data = this.dataSource.data.filter(u => u.id !== user.id);
-          alert('Usuário deletado com sucesso!');
+          this.showSuccessModal();
         },
         error: (err) => {
           console.error('Erro ao deletar usuário:', err);
@@ -89,5 +91,24 @@ export class UsersListComponent implements OnInit {
       return 'Nenhuma Cadastrada';
     }
     return user.userRoles.map(ur => ur.role.name).join(', ');
+  }
+
+  showSuccessModal(): void {
+    const dialogData: ConfirmationModalData = {
+      title: 'Usuário apagado com sucesso!',
+      message: '',
+      icon: 'check_circle',
+      confirmButtonText: 'OK'
+    }
+
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+      width: '400px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['admin/usuarios']);
+    });
+
   }
 }

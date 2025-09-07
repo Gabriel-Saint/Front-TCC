@@ -16,6 +16,9 @@ import { CategoryService } from '../../../core/services/categories.service';
 import { ProductsService } from '../../../core/services/products.service';
 import { IProduct, IProductPayload} from '../../../core/interfaces/product/product.interface'; 
 import { ICategory} from '../../../core/interfaces/category/category.interface'; 
+import { ConfirmationModalData } from '../../../core/interfaces/modal/confirmation-modal.interface';
+import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-product',
@@ -44,7 +47,8 @@ export class CreateProductComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private categoryService: CategoryService,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -97,11 +101,8 @@ export class CreateProductComponent implements OnInit {
 
     this.productsService.create(payload).subscribe({
       
-      next: (createdProduct) => {
-        console.log('Criando produto com payload:', payload);
-        console.log('Produto cadastrado com sucesso!', createdProduct);
-        alert('Produto cadastrado com sucesso!');
-        this.router.navigate(['/admin/produtos']);
+      next: () => {
+        this.showSuccessModal();
       },
       error: (err) => {
         console.log('Erro:', payload);
@@ -110,4 +111,23 @@ export class CreateProductComponent implements OnInit {
       }
     });
   }
+   showSuccessModal(): void {
+    const dialogData: ConfirmationModalData = {
+      title: 'Produto Criado com Sucesso!',
+      message: 'O novo produto foi criado e está disponível no sistema.',
+      icon: 'check_circle',
+      confirmButtonText: 'OK'
+    }
+
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+      width: '400px',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['admin/produtos']);
+    });
+      
+  }
+
 }

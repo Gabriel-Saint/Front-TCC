@@ -2,9 +2,7 @@
   <mat-sidenav #sidenav mode="side" opened class="sidenav">
     <mat-nav-list>
       <ng-container *ngFor="let item of navItems">
-        <a mat-list-item *ngIf="!item.children"
-           [routerLink]="item.path"
-           routerLinkActive="active-link">
+        <a mat-list-item *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active-link">
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           <span>{{ item.label }}</span>
         </a>
@@ -15,15 +13,19 @@
             <mat-icon class="submenu-arrow">{{ expandedStates[item.label] ? 'expand_less' : 'expand_more' }}</mat-icon>
           </a>
           <div class="submenu" *ngIf="expandedStates[item.label]">
-            <a mat-list-item *ngFor="let child of item.children"
-               [routerLink]="child.path"
-               routerLinkActive="active-link">
+            <a mat-list-item *ngFor="let child of item.children" [routerLink]="child.path"
+              routerLinkActive="active-link">
               {{ child.label }}
             </a>
           </div>
         </div>
-
       </ng-container>
+      <div class="sidebar-footer">
+        <a mat-list-item (click)="logout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span>Sair</span>
+        </a>
+      </div>
     </mat-nav-list>
   </mat-sidenav>
 

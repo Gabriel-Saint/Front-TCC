@@ -9,6 +9,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
+
+import { AuthService } from  '../../../core/services/auth.service';
+
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
@@ -27,7 +30,9 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./admin-layout.component.scss']
 })
 export class AdminLayoutComponent {
-  // Objeto para controlar o estado (aberto/fechado) de cada submenu
+
+  constructor(private authService: AuthService) {}
+
   expandedStates: { [key: string]: boolean } = {};
 
  
@@ -61,5 +66,9 @@ export class AdminLayoutComponent {
   ];
   toggleSubmenu(label: string): void {
     this.expandedStates[label] = !this.expandedStates[label];
+  }
+
+  logout(): void{
+    this.authService.logout();
   }
 }

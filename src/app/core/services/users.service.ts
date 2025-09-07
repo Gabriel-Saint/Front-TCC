@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-// Importando as novas interfaces
-import { IUser, IUserUpdatePayload } from '../../core/interfaces/user/user.interface'; // Crie este arquivo ou ajuste o caminho
+
+import { IUser, IUserUpdatePayload } from '../../core/interfaces/user/user.interface'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  // A URL base para as operações de usuário está no controller 'auth'
+  
   private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) { }

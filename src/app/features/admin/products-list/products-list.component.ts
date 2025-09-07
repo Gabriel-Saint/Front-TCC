@@ -15,6 +15,8 @@ import { CategoryService } from '../../../core/services/categories.service';
 import { IProduct } from '../../../core/interfaces/product/product.interface';
 import { ICategory } from '../../../core/interfaces/category/category.interface'; 
 import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
+import { ConfirmationModalComponent } from '../../../shared/components/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalData } from '../../../core/interfaces/modal/confirmation-modal.interface';
 
 @Component({
   selector: 'app-products-list',
@@ -34,9 +36,9 @@ export class ProductsListComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private categoryService: CategoryService, // 3. Injete o CategoryService
+    private categoryService: CategoryService, 
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -86,7 +88,7 @@ export class ProductsListComponent implements OnInit {
     if (confirm(`Tem certeza que deseja apagar o produto ${product.name}?`)) {
       this.productsService.remove(product.id).subscribe(() => {
         this.loadData();
-        alert('Produto apagado com sucesso!');
+        this.showSuccessModal();
       });
     }
   }
@@ -94,4 +96,23 @@ export class ProductsListComponent implements OnInit {
   goToAddProduct(): void {
     this.router.navigate(['admin/produtos/novo']);
   }
+
+    showSuccessModal(): void {
+      const dialogData: ConfirmationModalData = {
+        title: 'Produto apagado com sucesso!',
+        message: '',
+        icon: 'check_circle',
+        confirmButtonText: 'OK'
+      }
+  
+      const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+        width: '400px',
+        data: dialogData
+      });
+  
+      dialogRef.afterClosed().subscribe(() => {
+        this.router.navigate(['admin/produtos']);
+      });
+        
+    }
 }

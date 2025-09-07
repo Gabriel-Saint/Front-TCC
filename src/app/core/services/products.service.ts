@@ -9,7 +9,7 @@ import { IProduct, IProductPayload } from '../../core/interfaces/product/product
   providedIn: 'root'
 })
 export class ProductsService {
-  // Constrói a URL base da API de produtos a partir do arquivo de environment
+
   private apiUrl = `${environment.apiUrl}/products`;
 
   constructor(private http: HttpClient) { }

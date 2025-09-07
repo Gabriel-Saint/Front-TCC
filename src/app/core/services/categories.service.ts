@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-// Importando as interfaces que acabamos de definir
-import { ICategory, ICategoryPayload } from '../../core/interfaces/category/category.interface'; // Ajuste o caminho se necessário
+
+import { ICategory, ICategoryPayload } from '../../core/interfaces/category/category.interface'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  // Constrói a URL base da API de categorias a partir do arquivo de environment
+
   private apiUrl = `${environment.apiUrl}/category`;
 
   constructor(private http: HttpClient) { }

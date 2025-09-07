@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-// Importando a nova interface que criamos
+
 import { IDashboardData } from '../../core/interfaces/dashboard/dashboard.interface';
 
 @Injectable({
