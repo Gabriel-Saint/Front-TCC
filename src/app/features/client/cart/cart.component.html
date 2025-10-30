@@ -1,4 +1,4 @@
-<div class="cart-container">
+<!-- <div class="cart-container">
   <header class="cart-header">
     <button mat-icon-button class="back-button" *ngIf="checkoutStep !== 'items'" (click)="goToStep(checkoutStep === 'payment' ? 'checkout' : 'items')">
       <mat-icon>arrow_back_ios</mat-icon>
@@ -89,4 +89,106 @@
     <button mat-raised-button color="primary" (click)="goToStep('payment')" *ngIf="checkoutStep === 'checkout'">Ir para Pagamento</button>
     <button mat-raised-button color="primary" (click)="placeOrder()" *ngIf="checkoutStep === 'payment'">Finalizar Pedido</button>
   </footer>
+</div> -->
+
+
+<div class="cart-container">
+  <header class="cart-header">
+    <button mat-icon-button class="back-button" *ngIf="checkoutStep !== 'items'" (click)="goToStep(checkoutStep === 'payment' ? 'checkout' : 'items')">
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+    <div class="steps">
+      <span [class.active]="checkoutStep === 'items'">Sacola</span>
+      <span [class.active]="checkoutStep === 'checkout'">Dados</span>
+      <span [class.active]="checkoutStep === 'payment'">Pagamento</span>
+    </div>
+    <button mat-icon-button (click)="closeCart.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <div class="cart-content">
+    <div *ngIf="checkoutStep === 'items'" class="items-view">
+      <div *ngFor="let item of (cartItems$ | async)" class="cart-item">
+        <img [src]="environment.imageUrl + item.product.image" alt="">
+        <div class="item-details">
+          <p>{{ item.quantity }}x {{ item.product.name }}</p>
+          <span>{{ item.product.price | currency:'BRL' }}</span>
+        </div>
+        <button mat-icon-button (click)="removeItem(item.product.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="checkoutStep === 'checkout' || checkoutStep === 'payment'" [hidden]="checkoutStep !== 'checkout'" class="checkout-view">
+      <form [formGroup]="checkoutForm">
+        <h3>Como você quer receber?</h3>
+        <mat-button-toggle-group formControlName="deliveryType" class="delivery-toggle">
+          <mat-button-toggle value="Delivery"><mat-icon>local_shipping</mat-icon> Entrega</mat-button-toggle>
+          <mat-button-toggle value="Retirada"><mat-icon>storefront</mat-icon> Retirar</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <h3>Seus Dados</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Nome Completo</mat-label>
+          <input matInput formControlName="name" (input)="onNameInput($event)">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone (WhatsApp)</mat-label>
+          <input matInput formControlName="phone" (input)="onPhoneInput($event)" maxlength="15">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" *ngIf="checkoutForm.get('deliveryType')?.value === 'Delivery'">
+          <mat-label>Endereço de Entrega</mat-label>
+          <input matInput formControlName="address">
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>CPF na nota (opcional)</mat-label>
+          <input matInput formControlName="cpf" (input)="onCpfInput($event)" maxlength="14">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Observações (opcional)</mat-label>
+          <textarea matInput formControlName="customerNote"></textarea>
+        </mat-form-field>
+      </form>
+    </div>
+
+    <div *ngIf="checkoutStep === 'payment'" class="payment-view">
+      <div class="summary">
+        <div><span>Subtotal</span> <span>{{ cartTotal$ | async | currency:'BRL' }}</span></div>
+        <div><span>Taxa de entrega</span> <span>{{ deliveryFee | currency:'BRL' }}</span></div>
+        <div class="total"><span>Total</span> <span>{{ (cartTotal$ | async)! + deliveryFee | currency:'BRL' }}</span></div>
+      </div>
+      <form [formGroup]="checkoutForm">
+        <h3>Forma de Pagamento</h3>
+        <mat-radio-group formControlName="paymentType" class="payment-options">
+          <ng-container *ngIf="checkoutForm.get('deliveryType')?.value === 'Delivery'">
+            <mat-radio-button value="Dinheiro">Dinheiro</mat-radio-button>
+            <mat-radio-button value="Cartão">Cartão na Entrega</mat-radio-button>
+            <mat-radio-button value="Pix">Pix na Entrega</mat-radio-button>
+            <mat-radio-button value="MercadoPago">Pagar Online com Mercado Pago</mat-radio-button>
+          </ng-container>
+          <ng-container *ngIf="checkoutForm.get('deliveryType')?.value === 'Retirada'">
+            <mat-radio-button value="Dinheiro">Dinheiro</mat-radio-button>
+            <mat-radio-button value="Cartão">Cartão na Retirada</mat-radio-button>
+            <mat-radio-button value="Pix">Pix na Retirada</mat-radio-button>
+          </ng-container>
+        </mat-radio-group>
+
+        <mat-form-field appearance="outline" *ngIf="checkoutForm.get('paymentType')?.value === 'Dinheiro'">
+          <mat-label>Precisa de troco para quanto? (opcional)</mat-label>
+          <input matInput type="number" formControlName="changeFor">
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+
+  <footer class="cart-actions">
+    <button mat-raised-button color="primary" (click)="goToStep('checkout')" *ngIf="checkoutStep === 'items'">Continuar</button>
+    <button mat-raised-button color="primary" (click)="goToStep('payment')" *ngIf="checkoutStep === 'checkout'">Ir para Pagamento</button>
+    <button mat-raised-button color="primary" (click)="placeOrder()" *ngIf="checkoutStep === 'payment'">Finalizar Pedido</button>
+  </footer>
 </div>
+

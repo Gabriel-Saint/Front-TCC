@@ -86,4 +86,8 @@ export class ProductsService {
 
     return formData;
   }
+
+  toggleVisibility(id: number, visibility: boolean): Observable<IProduct> {
+    return this.http.patch<IProduct>(`${this.apiUrl}/${id}/visibility`, { visibility });
+  }
 }

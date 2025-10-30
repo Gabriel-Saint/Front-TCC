@@ -1,9 +1,13 @@
-<div class="tracking-page" *ngIf="order$ | async as order; else loadingOrNotFound">
+<!-- <div class="tracking-page" *ngIf="order$ | async as order; else loadingOrNotFound">
   <div class="order-card">
     <header class="card-header">
       <h2>Pedido #{{ order.id }}</h2>
       <div class="status-display">
-        <div class="status-indicator" *ngIf="order.status === 'Pendente' || order.status === 'Em Preparo'"></div>
+        <div 
+          class="status-indicator" 
+          [class.pending]="order.status === 'Pendente'"
+          *ngIf="order.status === 'Pendente' || order.status === 'Em Preparo'">
+        </div>
         <span class="status-text">{{ order.status }}</span>
       </div>
       <span class="order-time">{{ order.orderDate | date:'dd/MM/yyyy - HH:mm' }}</span>
@@ -20,7 +24,8 @@
 
     <section class="card-section items-list">
       <div *ngFor="let item of order.orderDetails" class="order-item">
-        <span>{{ item.quantity }}x Produto #{{ item.productId }}</span>
+        <span *ngIf="item.product">{{ item.quantity }}x {{ item.product.name }}</span>
+        <span *ngIf="!item.product">{{ item.quantity }}x Produto #{{ item.productId }}</span>
       </div>
     </section>
 
@@ -41,3 +46,54 @@
     <p>Carregando detalhes do pedido...</p>
   </div>
 </ng-template>
+ -->
+
+ <div class="tracking-page" *ngIf="order$ | async as order; else loadingOrNotFound">
+  <div class="order-card">
+    <header class="card-header">
+      <h2>Pedido #{{ order.id }}</h2>
+      <div class="status-display">
+        <div 
+          class="status-indicator" 
+          [class.pending]="order.status === 'Pendente'"
+          *ngIf="order.status === 'Pendente' || order.status === 'Em Preparo'">
+        </div>
+        <span class="status-text">{{ order.status }}</span>
+      </div>
+      <span class="order-time">{{ order.orderDate | date:'dd/MM/yyyy - HH:mm' }}</span>
+    </header>
+
+    <mat-divider></mat-divider>
+
+    <section class="card-section">
+      <h3>{{ order.name }}</h3>
+      <p class="customer-phone">{{ order.phone }}</p>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="card-section items-list">
+      <div *ngFor="let item of order.orderDetails" class="order-item">
+        <span *ngIf="item.product">{{ item.quantity }}x {{ item.product.name }}</span>
+        <span *ngIf="!item.product">{{ item.quantity }}x Produto #{{ item.productId }}</span>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="card-section summary" *ngIf="order.payments && order.payments.length > 0">
+      <div class="summary-total">
+        <span>Total:</span>
+        <span>{{ order.payments[0].total | currency:'BRL' }}</span>
+      </div>
+      <p class="payment-method">Método de pagamento: {{ order.payments[0].type }}</p>
+    </section>
+  </div>
+</div>
+
+<ng-template #loadingOrNotFound>
+  <div class="center-message">
+    <p>Carregando detalhes do pedido...</p>
+  </div>
+</ng-template>
+

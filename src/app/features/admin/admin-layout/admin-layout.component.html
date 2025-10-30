@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidenav-container">
+<!-- <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="side" opened class="sidenav">
     <mat-nav-list>
       <ng-container *ngFor="let item of navItems">
@@ -27,6 +27,57 @@
         </a>
       </div>
     </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Painel Administrativo</span>
+    </mat-toolbar>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container> -->
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    
+    <mat-nav-list>
+      <ng-container *ngFor="let item of navItems">
+        <a mat-list-item *ngIf="!item.children" [routerLink]="item.path" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+        <div *ngIf="item.children">
+          <a mat-list-item (click)="toggleSubmenu(item.label)" class="parent-item">
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+            <mat-icon class="submenu-arrow">{{ expandedStates[item.label] ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </a>
+          <div class="submenu" *ngIf="expandedStates[item.label]">
+            <a mat-list-item *ngFor="let child of item.children" [routerLink]="child.path"
+              routerLinkActive="active-link">
+              {{ child.label }}
+            </a>
+          </div>
+        </div>
+      </ng-container>
+    </mat-nav-list>
+
+    <div class="sidebar-footer">
+      <a mat-list-item href="http://localhost:4200" target="_blank" rel="noopener noreferrer">
+        <mat-icon matListItemIcon>storefront</mat-icon>
+        <span>Ver Site</span>
+      </a>
+      <a mat-list-item (click)="logout()">
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <span>Sair</span>
+      </a>
+    </div>
+
   </mat-sidenav>
 
   <mat-sidenav-content>
