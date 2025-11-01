@@ -8,6 +8,7 @@ export interface IProductPayload {
 }
 export interface IProduct {
   id: number;
+  active: boolean;
   name: string;
   image: string; 
   visibility: boolean;

@@ -51,7 +51,9 @@ export class EditProductModalComponent implements OnInit {
       categoryId: [this.product.categoryId, Validators.required],
       price: [this.product.price, [Validators.required, Validators.min(0.01)]],
       description: [this.product.description, Validators.required],
-      image: [null] // Inicia como nulo, só terá valor se o usuário escolher uma nova imagem
+      image: [null],
+      active: [this.product.active],
+      visibility: [this.product.visibility]
     });
 
     // 5. Construa a URL completa da imagem atual para a pré-visualização inicial

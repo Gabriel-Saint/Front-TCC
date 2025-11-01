@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   // Rotas de Autenticação (continuam acessíveis por suas URLs diretas)
@@ -21,7 +22,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.DashboardComponent)
+        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.DashboardComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'produtos/novo',
@@ -33,11 +35,13 @@ export const routes: Routes = [
       },
       {
         path: 'usuarios',
-        loadComponent: () => import('./features/admin/users-list/users-list.component').then(c => c.UsersListComponent)
+        loadComponent: () => import('./features/admin/users-list/users-list.component').then(c => c.UsersListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'usuarios/novo',
-        loadComponent: () => import('./features/admin/create-user/create-user.component').then(c => c.CreateUserComponent)
+        loadComponent: () => import('./features/admin/create-user/create-user.component').then(c => c.CreateUserComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'produtos',
@@ -45,11 +49,13 @@ export const routes: Routes = [
       },
       {
         path: 'categorias',
-        loadComponent: () => import('./features/admin/categories-list/categories-list.component').then(c => c.CategoriesListComponent)
+        loadComponent: () => import('./features/admin/categories-list/categories-list.component').then(c => c.CategoriesListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'roles',
-        loadComponent: () => import('./features/admin/roles-list/roles-list.component').then(c => c.RolesListComponent)
+        loadComponent: () => import('./features/admin/roles-list/roles-list.component').then(c => c.RolesListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'pagamento/:status', 
